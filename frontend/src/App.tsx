@@ -14,6 +14,7 @@ import {
   useBookingsDate,
 } from "./pages/Bookings/BookingsDateContext";
 import WeekStrip from "./pages/Bookings/components/WeekStrip";
+import LoginPage from "./pages/Auth/LoginPage";
 
 const drawerWidth = 260;
 
@@ -27,6 +28,14 @@ function WeekStripWithContext() {
 function App() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  if (location.pathname === "/login") {
+    return (
+      <ThemeProvider theme={theme}>
+        <LoginPage />
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>
