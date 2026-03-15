@@ -2,6 +2,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import EventIcon from "@mui/icons-material/Event";
 import PeopleIcon from "@mui/icons-material/People";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import SecurityIcon from "@mui/icons-material/Security";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PriceChangeIcon from "@mui/icons-material/PriceChange";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -12,6 +13,10 @@ export const sidebarMenuItems = [
   { label: "Bookings", icon: EventIcon, path: "/bookings" },
   { label: "Drivers", icon: PeopleIcon, path: "/drivers" },
   { label: "Fleet", icon: DirectionsCarIcon, path: "/fleet" },
+];
+
+export const sidebarSecurityItems = [
+  { label: "Security / Partners", icon: SecurityIcon, path: "/security-partners" },
 ];
 
 export const sidebarFinancialItems = [

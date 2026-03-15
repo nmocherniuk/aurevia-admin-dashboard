@@ -13,6 +13,7 @@ import {
 import { alpha } from "@mui/material/styles";
 import {
   sidebarMenuItems,
+  sidebarSecurityItems,
   sidebarFinancialItems,
   sidebarBottomItems,
 } from "./sidebarItems";
@@ -44,7 +45,9 @@ export default function Sidebar({ open = false, onClose }: SidebarProps) {
   ) =>
     items.map((item) => {
       const Icon = item.icon;
-      const isActive = pathname === item.path;
+      const isActive =
+        pathname === item.path ||
+        (item.path !== "/" && pathname.startsWith(item.path + "/"));
 
       return (
         <ListItemButton
@@ -145,6 +148,15 @@ export default function Sidebar({ open = false, onClose }: SidebarProps) {
       <SectionTitle>Main Menu</SectionTitle>
       <List disablePadding sx={{ px: 0, bgcolor: "background.paper" }}>
         {renderListItems(sidebarMenuItems)}
+      </List>
+
+      <Divider
+        sx={{ borderColor: "divider", mx: 2, my: 1, bgcolor: "transparent" }}
+      />
+
+      <SectionTitle>Security / Partners</SectionTitle>
+      <List disablePadding sx={{ px: 0, bgcolor: "background.paper" }}>
+        {renderListItems(sidebarSecurityItems)}
       </List>
 
       <Divider
