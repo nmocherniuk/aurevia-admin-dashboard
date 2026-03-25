@@ -11,6 +11,8 @@ import {
   type CreateOrganizationData,
   upsertChauffeurOrganizationDetails,
   type ChauffeurOrganizationDetailsUpsertData,
+  upsertSecurityOrganizationDetails,
+  type SecurityOrganizationDetailsUpsertData,
 } from "./organization.repository.js";
 
 export type PublicOrganization = {
@@ -24,6 +26,7 @@ export type PublicOrganization = {
   type: OrganizationType;
   createdAt: string;
   chauffeurDetails?: ChauffeurOrganizationDetailsUpsertData | null;
+  securityDetails?: SecurityOrganizationDetailsUpsertData | null;
 };
 
 function statusFromBool(status: boolean): "active" | "inactive" {
@@ -40,6 +43,7 @@ function stripUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
 
 export function toPublicOrganization(row: Organizations & {
   chauffeurDetails?: ChauffeurOrganizationDetailsUpsertData | null;
+  securityDetails?: SecurityOrganizationDetailsUpsertData | null;
 }): PublicOrganization {
   return {
     id: row.id,
@@ -52,6 +56,7 @@ export function toPublicOrganization(row: Organizations & {
     type: row.type,
     createdAt: row.createdAt.toISOString(),
     chauffeurDetails: row.chauffeurDetails ?? null,
+    securityDetails: row.securityDetails ?? null,
   };
 }
 
@@ -63,6 +68,7 @@ export async function createOrganization(
   input: Omit<CreateOrganizationData, "status"> & {
     status: "active" | "inactive";
     chauffeurDetails?: ChauffeurOrganizationDetailsUpsertData;
+    securityDetails?: SecurityOrganizationDetailsUpsertData;
   },
 ) {
   const data: CreateOrganizationData = {
@@ -74,6 +80,16 @@ export async function createOrganization(
   // CHAUFFEUR extension table
   if (input.type === "CHAUFFEUR" && input.chauffeurDetails) {
     await upsertChauffeurOrganizationDetails(row.id, stripUndefined(input.chauffeurDetails));
+    const fresh = await findOrganizationById(row.id);
+    return fresh ? toPublicOrganization(fresh) : toPublicOrganization(row);
+  }
+
+  // SECURITY extension table
+  if (input.type === "SECURITY" && input.securityDetails) {
+    await upsertSecurityOrganizationDetails(
+      row.id,
+      stripUndefined(input.securityDetails),
+    );
     const fresh = await findOrganizationById(row.id);
     return fresh ? toPublicOrganization(fresh) : toPublicOrganization(row);
   }
@@ -105,6 +121,7 @@ export async function updateOrganization(
   input: Omit<CreateOrganizationData, "type" | "status"> & {
     status: "active" | "inactive";
     chauffeurDetails?: ChauffeurOrganizationDetailsUpsertData;
+    securityDetails?: SecurityOrganizationDetailsUpsertData;
   },
   typeFilter?: OrganizationType,
 ) {
@@ -128,6 +145,15 @@ export async function updateOrganization(
     await upsertChauffeurOrganizationDetails(
       updated.id,
       stripUndefined(input.chauffeurDetails),
+    );
+    const fresh = await findOrganizationById(updated.id);
+    return fresh ? toPublicOrganization(fresh) : toPublicOrganization(updated);
+  }
+
+  if (typeFilter === "SECURITY" && input.securityDetails) {
+    await upsertSecurityOrganizationDetails(
+      updated.id,
+      stripUndefined(input.securityDetails),
     );
     const fresh = await findOrganizationById(updated.id);
     return fresh ? toPublicOrganization(fresh) : toPublicOrganization(updated);

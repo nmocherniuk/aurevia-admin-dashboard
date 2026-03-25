@@ -65,6 +65,63 @@ export const chauffeurOrganizationDetailsInputSchema = z
   })
   .partial();
 
+export const securityOrganizationDetailsInputSchema = z
+  .object({
+    // Company Information
+    companyName: z.string().optional(),
+    legalForm: z.string().optional(),
+    sirenOrSiret: z.string().optional(),
+    licenseNumber: z.string().optional(),
+    cnapsNumber: z.string().optional(),
+    registrationDate: z.coerce.date().optional(),
+    registeredAddress: z.string().optional(),
+    officeAddress: z.string().optional(),
+    websiteUrl: z.string().url().optional(),
+    generalEmail: z.string().email().optional(),
+    companyPhoneNumber: z.string().optional(),
+    directorFullName: z.string().optional(),
+    primaryContactName: z.string().optional(),
+    primaryContactEmail: z.string().email().optional(),
+    primaryContactPhone: z.string().optional(),
+
+    // Documents metadata
+    kbisUploaded: z.boolean().optional(),
+    licenseUploaded: z.boolean().optional(),
+    rcProInsuranceUploaded: z.boolean().optional(),
+    cnapsAuthorizationUploaded: z.boolean().optional(),
+    bankDetailsProvided: z.boolean().optional(),
+    directorIdCopyProvided: z.boolean().optional(),
+    signedPartnershipAgreement: z.boolean().optional(),
+    additionalCertifications: z.string().optional(),
+
+    // Operations
+    serviceAreas: z.string().optional(),
+    serviceTypes: z.array(z.string()).optional(),
+    support24_7: z.boolean().optional(),
+    minBookingHours: z.coerce.number().int().optional(),
+    mobilizationTimeMinutes: z.coerce.number().int().optional(),
+    agentsCount: z.coerce.number().int().optional(),
+    languagesSpoken: z.array(z.string()).optional(),
+    hasTeamLeader: z.boolean().optional(),
+    armedPersonnelAllowed: z.boolean().optional(),
+    unarmedPersonnelAllowed: z.boolean().optional(),
+    internationalMissions: z.boolean().optional(),
+    specialRequirements: z.string().optional(),
+
+    // Financial
+    hourlyRate: z.coerce.number().optional(),
+    dailyRate: z.coerce.number().optional(),
+    nightRate: z.coerce.number().optional(),
+    eventRate: z.coerce.number().optional(),
+    executiveProtectionRate: z.coerce.number().optional(),
+    minimumBookingAmount: z.coerce.number().optional(),
+    commissionPercent: z.coerce.number().optional(),
+    paymentTerms: z.string().optional(),
+    bankAccountIban: z.string().optional(),
+    currency: z.string().optional(),
+  })
+  .partial();
+
 export const createOrganizationSchema = z.object({
   title: z.string().min(1),
   email: z.string().email(),
@@ -74,6 +131,7 @@ export const createOrganizationSchema = z.object({
   status: organizationStatusInputSchema,
   type: organizationTypeSchema,
   chauffeurDetails: chauffeurOrganizationDetailsInputSchema.optional(),
+  securityDetails: securityOrganizationDetailsInputSchema.optional(),
 });
 
 export const updateOrganizationSchema = createOrganizationSchema.omit({

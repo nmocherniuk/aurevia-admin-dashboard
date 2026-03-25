@@ -9,7 +9,7 @@ import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
 import type { Partner } from "../features/partners/Security/data/types";
 import PartnerManagementModal, {
   type PartnerFormValues,
-} from "../features/partners/Security/components/PartnerManagementModal";
+} from "../features/partners/Security/components/ModalManagement/PartnerManagementModal";
 import PartnersTable from "../features/partners/Security/components/PartnersTable";
 import {
   createOrganization,

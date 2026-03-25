@@ -4,7 +4,8 @@ import type { DriverOrganization } from "../features/partners/Drivers/data/types
 import type { ChauffeurOrganizationDetails } from "../features/partners/Drivers/data/types";
 import type { Partner } from "../features/partners/Security/data/types";
 import type { DriverOrganizationFormValues } from "../features/partners/Drivers/components/drivers/ModalManagement/DriverOrganizationManagementModal";
-import type { PartnerFormValues } from "../features/partners/Security/components/PartnerManagementModal";
+import type { PartnerFormValues } from "../features/partners/Security/components/ModalManagement/PartnerManagementModal";
+import type { SecurityOrganizationDetails } from "../features/partners/Security/data/types";
 
 export type OrganizationType = "CHAUFFEUR" | "SECURITY";
 
@@ -19,6 +20,7 @@ export type OrganizationDto = {
   type: OrganizationType;
   createdAt: string;
   chauffeurDetails?: ChauffeurOrganizationDetails | null;
+  securityDetails?: SecurityOrganizationDetails | null;
 };
 
 export type CreateOrganizationBody = {
@@ -30,6 +32,7 @@ export type CreateOrganizationBody = {
   status: "active" | "inactive";
   type: OrganizationType;
   chauffeurDetails?: ChauffeurOrganizationDetailsDto;
+  securityDetails?: SecurityOrganizationDetailsDto;
 };
 
 export type UpdateOrganizationBody = Omit<CreateOrganizationBody, "type">;
@@ -87,6 +90,57 @@ export type ChauffeurOrganizationDetailsDto = {
   waitingTimeFee?: number;
 };
 
+export type SecurityOrganizationDetailsDto = {
+  companyName?: string;
+  legalForm?: string;
+  sirenOrSiret?: string;
+  licenseNumber?: string;
+  cnapsNumber?: string;
+  registrationDate?: string;
+  registeredAddress?: string;
+  officeAddress?: string;
+  websiteUrl?: string;
+  generalEmail?: string;
+  companyPhoneNumber?: string;
+  directorFullName?: string;
+  primaryContactName?: string;
+  primaryContactEmail?: string;
+  primaryContactPhone?: string;
+
+  kbisUploaded?: boolean;
+  licenseUploaded?: boolean;
+  rcProInsuranceUploaded?: boolean;
+  cnapsAuthorizationUploaded?: boolean;
+  bankDetailsProvided?: boolean;
+  directorIdCopyProvided?: boolean;
+  signedPartnershipAgreement?: boolean;
+  additionalCertifications?: string;
+
+  serviceAreas?: string;
+  serviceTypes?: string[];
+  support24_7?: boolean;
+  minBookingHours?: number;
+  mobilizationTimeMinutes?: number;
+  agentsCount?: number;
+  languagesSpoken?: string[];
+  hasTeamLeader?: boolean;
+  armedPersonnelAllowed?: boolean;
+  unarmedPersonnelAllowed?: boolean;
+  internationalMissions?: boolean;
+  specialRequirements?: string;
+
+  hourlyRate?: number;
+  dailyRate?: number;
+  nightRate?: number;
+  eventRate?: number;
+  executiveProtectionRate?: number;
+  minimumBookingAmount?: number;
+  commissionPercent?: number;
+  paymentTerms?: string;
+  bankAccountIban?: string;
+  currency?: string;
+};
+
 export function dtoToDriverOrganization(
   o: OrganizationDto,
 ): DriverOrganization {
@@ -111,6 +165,7 @@ export function dtoToPartner(o: OrganizationDto): Partner {
     phone: o.phone,
     locationServiceArea: o.serviceArea,
     status: o.status,
+    securityDetails: o.securityDetails ?? null,
   };
 }
 
@@ -202,6 +257,20 @@ export function driverFormToCreateBody(
 export function partnerFormToCreateBody(
   values: PartnerFormValues,
 ): CreateOrganizationBody {
+  const trimOrUndefined = (s: string) => (s.trim() ? s.trim() : undefined);
+  const intOrUndefined = (s: string) => {
+    const t = s.trim();
+    if (!t) return undefined;
+    const n = Number.parseInt(t, 10);
+    return Number.isFinite(n) ? n : undefined;
+  };
+  const floatOrUndefined = (s: string) => {
+    const t = s.trim();
+    if (!t) return undefined;
+    const n = Number.parseFloat(t);
+    return Number.isFinite(n) ? n : undefined;
+  };
+
   return {
     title: values.companyName.trim(),
     email: values.email.trim(),
@@ -210,6 +279,56 @@ export function partnerFormToCreateBody(
     serviceArea: values.locationServiceArea.trim(),
     status: values.status,
     type: "SECURITY",
+    securityDetails: {
+      companyName: values.companyName.trim() || undefined,
+      legalForm: trimOrUndefined(values.legalForm),
+      sirenOrSiret: trimOrUndefined(values.sirenOrSiret),
+      licenseNumber: trimOrUndefined(values.licenseNumber),
+      cnapsNumber: trimOrUndefined(values.cnapsNumber),
+      registrationDate: trimOrUndefined(values.registrationDate),
+      registeredAddress: trimOrUndefined(values.registeredAddress),
+      officeAddress: trimOrUndefined(values.officeAddress),
+      websiteUrl: trimOrUndefined(values.websiteUrl),
+      generalEmail: trimOrUndefined(values.generalEmail),
+      companyPhoneNumber: trimOrUndefined(values.companyPhoneNumber),
+      directorFullName: trimOrUndefined(values.directorFullName),
+      primaryContactName: trimOrUndefined(values.primaryContactName),
+      primaryContactEmail: trimOrUndefined(values.primaryContactEmail),
+      primaryContactPhone: trimOrUndefined(values.primaryContactPhone),
+
+      kbisUploaded: values.kbisUploaded,
+      licenseUploaded: values.licenseUploaded,
+      rcProInsuranceUploaded: values.rcProInsuranceUploaded,
+      cnapsAuthorizationUploaded: values.cnapsAuthorizationUploaded,
+      bankDetailsProvided: values.bankDetailsProvided,
+      directorIdCopyProvided: values.directorIdCopyProvided,
+      signedPartnershipAgreement: values.signedPartnershipAgreement,
+      additionalCertifications: trimOrUndefined(values.additionalCertifications),
+
+      serviceAreas: trimOrUndefined(values.serviceAreas),
+      serviceTypes: values.serviceTypes,
+      support24_7: values.support24_7,
+      minBookingHours: intOrUndefined(values.minBookingHours),
+      mobilizationTimeMinutes: intOrUndefined(values.mobilizationTimeMinutes),
+      agentsCount: intOrUndefined(values.agentsCount),
+      languagesSpoken: values.languagesSpoken,
+      hasTeamLeader: values.hasTeamLeader,
+      armedPersonnelAllowed: values.armedPersonnelAllowed,
+      unarmedPersonnelAllowed: values.unarmedPersonnelAllowed,
+      internationalMissions: values.internationalMissions,
+      specialRequirements: trimOrUndefined(values.specialRequirements),
+
+      hourlyRate: floatOrUndefined(values.hourlyRate),
+      dailyRate: floatOrUndefined(values.dailyRate),
+      nightRate: floatOrUndefined(values.nightRate),
+      eventRate: floatOrUndefined(values.eventRate),
+      executiveProtectionRate: floatOrUndefined(values.executiveProtectionRate),
+      minimumBookingAmount: floatOrUndefined(values.minimumBookingAmount),
+      commissionPercent: floatOrUndefined(values.commissionPercent),
+      paymentTerms: trimOrUndefined(values.paymentTerms),
+      bankAccountIban: trimOrUndefined(values.bankAccountIban),
+      currency: values.currency,
+    },
   };
 }
 
@@ -300,6 +419,20 @@ export function driverFormToUpdateBody(
 export function partnerFormToUpdateBody(
   values: PartnerFormValues,
 ): UpdateOrganizationBody {
+  const trimOrUndefined = (s: string) => (s.trim() ? s.trim() : undefined);
+  const intOrUndefined = (s: string) => {
+    const t = s.trim();
+    if (!t) return undefined;
+    const n = Number.parseInt(t, 10);
+    return Number.isFinite(n) ? n : undefined;
+  };
+  const floatOrUndefined = (s: string) => {
+    const t = s.trim();
+    if (!t) return undefined;
+    const n = Number.parseFloat(t);
+    return Number.isFinite(n) ? n : undefined;
+  };
+
   return {
     title: values.companyName.trim(),
     email: values.email.trim(),
@@ -307,6 +440,56 @@ export function partnerFormToUpdateBody(
     contactPerson: values.contactPerson.trim(),
     serviceArea: values.locationServiceArea.trim(),
     status: values.status,
+    securityDetails: {
+      companyName: values.companyName.trim() || undefined,
+      legalForm: trimOrUndefined(values.legalForm),
+      sirenOrSiret: trimOrUndefined(values.sirenOrSiret),
+      licenseNumber: trimOrUndefined(values.licenseNumber),
+      cnapsNumber: trimOrUndefined(values.cnapsNumber),
+      registrationDate: trimOrUndefined(values.registrationDate),
+      registeredAddress: trimOrUndefined(values.registeredAddress),
+      officeAddress: trimOrUndefined(values.officeAddress),
+      websiteUrl: trimOrUndefined(values.websiteUrl),
+      generalEmail: trimOrUndefined(values.generalEmail),
+      companyPhoneNumber: trimOrUndefined(values.companyPhoneNumber),
+      directorFullName: trimOrUndefined(values.directorFullName),
+      primaryContactName: trimOrUndefined(values.primaryContactName),
+      primaryContactEmail: trimOrUndefined(values.primaryContactEmail),
+      primaryContactPhone: trimOrUndefined(values.primaryContactPhone),
+
+      kbisUploaded: values.kbisUploaded,
+      licenseUploaded: values.licenseUploaded,
+      rcProInsuranceUploaded: values.rcProInsuranceUploaded,
+      cnapsAuthorizationUploaded: values.cnapsAuthorizationUploaded,
+      bankDetailsProvided: values.bankDetailsProvided,
+      directorIdCopyProvided: values.directorIdCopyProvided,
+      signedPartnershipAgreement: values.signedPartnershipAgreement,
+      additionalCertifications: trimOrUndefined(values.additionalCertifications),
+
+      serviceAreas: trimOrUndefined(values.serviceAreas),
+      serviceTypes: values.serviceTypes,
+      support24_7: values.support24_7,
+      minBookingHours: intOrUndefined(values.minBookingHours),
+      mobilizationTimeMinutes: intOrUndefined(values.mobilizationTimeMinutes),
+      agentsCount: intOrUndefined(values.agentsCount),
+      languagesSpoken: values.languagesSpoken,
+      hasTeamLeader: values.hasTeamLeader,
+      armedPersonnelAllowed: values.armedPersonnelAllowed,
+      unarmedPersonnelAllowed: values.unarmedPersonnelAllowed,
+      internationalMissions: values.internationalMissions,
+      specialRequirements: trimOrUndefined(values.specialRequirements),
+
+      hourlyRate: floatOrUndefined(values.hourlyRate),
+      dailyRate: floatOrUndefined(values.dailyRate),
+      nightRate: floatOrUndefined(values.nightRate),
+      eventRate: floatOrUndefined(values.eventRate),
+      executiveProtectionRate: floatOrUndefined(values.executiveProtectionRate),
+      minimumBookingAmount: floatOrUndefined(values.minimumBookingAmount),
+      commissionPercent: floatOrUndefined(values.commissionPercent),
+      paymentTerms: trimOrUndefined(values.paymentTerms),
+      bankAccountIban: trimOrUndefined(values.bankAccountIban),
+      currency: values.currency,
+    },
   };
 }
 
