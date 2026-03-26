@@ -5,20 +5,31 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PageHeader from "../components/PageHeader";
 
 import ConfirmDeleteDialog from "../components/ConfirmDeleteDialog";
-import { DUMMY_BODYGUARDS } from "../features/partners/Security/data/dummyPartners";
 import type { Bodyguard, Partner } from "../features/partners/Security/data/types";
-import BodyguardModal, {
-  type BodyguardFormValues,
-} from "../features/partners/Security/components/bodyguards/BodyguardModal";
 import BodyguardsTable from "../features/partners/Security/components/bodyguards/BodyguardsTable";
+import BodyguardManagementModal from "../features/partners/Security/components/bodyguards/ModalManagement/BodyguardManagementModal";
+import type { SecurityAgentFormValues } from "../features/partners/Security/components/bodyguards/ModalManagement/bodyguardForm.types";
+import {
+  agentDtoToBodyguard,
+  formValuesToCreateBody,
+  formValuesToUpdateBody,
+} from "../features/partners/Security/components/bodyguards/ModalManagement/bodyguardForm.mapper";
+import {
+  createSecurityAgent,
+  deleteSecurityAgent,
+  listSecurityAgents,
+  updateSecurityAgent,
+  type CreateSecurityAgentBody,
+  type SecurityAgentDto,
+} from "../api/securityAgents";
 import {
   dtoToPartner,
   getApiErrorMessage,
@@ -33,42 +44,61 @@ type BodyguardsSectionProps = {
 };
 
 function SecurityBodyguardsSection({ partner, partnerId }: BodyguardsSectionProps) {
-  const [bodyguards, setBodyguards] = useState<Bodyguard[]>(() =>
-    DUMMY_BODYGUARDS.filter((b) => b.partnerId === partnerId),
+  const queryClient = useQueryClient();
+
+  const agentsQuery = useQuery({
+    queryKey: queryKeys.securityAgents.byOrganization(partnerId),
+    queryFn: () => listSecurityAgents(partnerId),
+  });
+
+  const bodyguards = useMemo(
+    () => (agentsQuery.data ?? []).map(agentDtoToBodyguard),
+    [agentsQuery.data],
   );
 
   const [bodyguardModal, setBodyguardModal] = useState<{
     open: boolean;
-    bodyguard: Bodyguard | null;
+    agentDto: SecurityAgentDto | null;
     readOnly?: boolean;
   }>({
     open: false,
-    bodyguard: null,
+    agentDto: null,
     readOnly: false,
   });
   const [bodyguardToDelete, setBodyguardToDelete] = useState<Bodyguard | null>(
     null,
   );
 
-  const handleSaveBodyguard = (
-    bodyguardId: string | null,
-    values: BodyguardFormValues,
+  const findDto = (b: Bodyguard): SecurityAgentDto | null =>
+    agentsQuery.data?.find((a) => a.id === b.id) ?? null;
+
+  const handleSaveBodyguard = async (
+    agentId: string | null,
+    values: SecurityAgentFormValues,
   ) => {
-    if (bodyguardId) {
-      setBodyguards((prev) =>
-        prev.map((b) => (b.id === bodyguardId ? { ...b, ...values } : b)),
+    if (agentId) {
+      await updateSecurityAgent(
+        agentId,
+        formValuesToUpdateBody(values),
+        partnerId,
       );
     } else {
-      const newId = `BGY-${String(bodyguards.length + 100).padStart(3, "0")}`;
-      setBodyguards((prev) => [
-        ...prev,
-        { id: newId, partnerId, ...values },
-      ]);
+      await createSecurityAgent(
+        formValuesToCreateBody(partnerId, values) as CreateSecurityAgentBody,
+      );
     }
+    await queryClient.invalidateQueries({
+      queryKey: queryKeys.securityAgents.byOrganization(partnerId),
+    });
   };
 
-  const handleDeleteBodyguard = (b: Bodyguard) => {
-    setBodyguards((prev) => prev.filter((x) => x.id !== b.id));
+  const handleConfirmDelete = async () => {
+    if (!bodyguardToDelete) return;
+    await deleteSecurityAgent(bodyguardToDelete.id, partnerId);
+    await queryClient.invalidateQueries({
+      queryKey: queryKeys.securityAgents.byOrganization(partnerId),
+    });
+    setBodyguardToDelete(null);
   };
 
   return (
@@ -87,7 +117,7 @@ function SecurityBodyguardsSection({ partner, partnerId }: BodyguardsSectionProp
               onClick={() =>
                 setBodyguardModal({
                   open: true,
-                  bodyguard: null,
+                  agentDto: null,
                   readOnly: false,
                 })
               }
@@ -108,35 +138,44 @@ function SecurityBodyguardsSection({ partner, partnerId }: BodyguardsSectionProp
         />
       </Box>
       <Box sx={{ mt: 2 }}>
-        <BodyguardsTable
-          bodyguards={bodyguards}
-          onBodyguardView={(b) =>
-            setBodyguardModal({ open: true, bodyguard: b, readOnly: true })
-          }
-          onBodyguardEdit={(b) =>
-            setBodyguardModal({ open: true, bodyguard: b, readOnly: false })
-          }
-          onBodyguardDelete={setBodyguardToDelete}
-        />
+        {agentsQuery.isPending ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress size={32} />
+          </Box>
+        ) : (
+          <BodyguardsTable
+            bodyguards={bodyguards}
+            onBodyguardView={(b) =>
+              setBodyguardModal({
+                open: true,
+                agentDto: findDto(b),
+                readOnly: true,
+              })
+            }
+            onBodyguardEdit={(b) =>
+              setBodyguardModal({
+                open: true,
+                agentDto: findDto(b),
+                readOnly: false,
+              })
+            }
+            onBodyguardDelete={setBodyguardToDelete}
+          />
+        )}
       </Box>
-      <BodyguardModal
+      <BodyguardManagementModal
         open={bodyguardModal.open}
         onClose={() =>
           setBodyguardModal((prev) => ({ ...prev, open: false }))
         }
-        bodyguard={bodyguardModal.bodyguard}
+        agent={bodyguardModal.agentDto}
         readOnly={bodyguardModal.readOnly}
         onSave={handleSaveBodyguard}
       />
       <ConfirmDeleteDialog
         open={!!bodyguardToDelete}
         onClose={() => setBodyguardToDelete(null)}
-        onConfirm={() => {
-          if (bodyguardToDelete) {
-            handleDeleteBodyguard(bodyguardToDelete);
-            setBodyguardToDelete(null);
-          }
-        }}
+        onConfirm={() => void handleConfirmDelete()}
         title="Видалити охоронця?"
         message="Цю дію не можна скасувати."
       />

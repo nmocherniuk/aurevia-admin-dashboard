@@ -1,4 +1,4 @@
-import type { Partner, Bodyguard } from "./types";
+import type { Partner } from "./types";
 
 export const DUMMY_PARTNERS: Partner[] = [
   {
@@ -27,58 +27,5 @@ export const DUMMY_PARTNERS: Partner[] = [
     phone: "+44 20 7946 0456",
     locationServiceArea: "UK-wide",
     status: "inactive",
-  },
-];
-
-export const DUMMY_BODYGUARDS: Bodyguard[] = [
-  {
-    id: "BGY-001",
-    partnerId: "PRT-001",
-    name: "David Clarke",
-    licenseCertification: "SIA Close Protection",
-    experience: "8 years",
-    languages: "English, French",
-    availabilityStatus: "available",
-    notes: "Ex-military, VIP experience",
-  },
-  {
-    id: "BGY-002",
-    partnerId: "PRT-001",
-    name: "Emma Watson",
-    licenseCertification: "SIA Close Protection, First Aid",
-    experience: "5 years",
-    languages: "English, Spanish",
-    availabilityStatus: "on_assignment",
-    notes: "",
-  },
-  {
-    id: "BGY-003",
-    partnerId: "PRT-001",
-    name: "Robert Hayes",
-    licenseCertification: "SIA Close Protection",
-    experience: "12 years",
-    languages: "English, German",
-    availabilityStatus: "available",
-    notes: "Corporate events specialist",
-  },
-  {
-    id: "BGY-004",
-    partnerId: "PRT-002",
-    name: "Lisa Park",
-    licenseCertification: "SIA Close Protection",
-    experience: "6 years",
-    languages: "English, Korean",
-    availabilityStatus: "off_duty",
-    notes: "",
-  },
-  {
-    id: "BGY-005",
-    partnerId: "PRT-002",
-    name: "Thomas Wright",
-    licenseCertification: "SIA Close Protection, Defensive Driving",
-    experience: "10 years",
-    languages: "English",
-    availabilityStatus: "available",
-    notes: "High-profile events",
   },
 ];
