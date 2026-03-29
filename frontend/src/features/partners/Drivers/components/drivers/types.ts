@@ -48,6 +48,8 @@ export type Driver = {
     rides?: number;
     earning?: string;
     todayShift?: string;
+    createdAt?: string;
+    updatedAt?: string;
 };
 
 export type DriverFormValues = Omit<Driver, "organizationId" | "organizationName">;

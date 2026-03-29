@@ -9,9 +9,11 @@ import WeeklyRevenueCard from "../features/Dashboard/components/WeeklyRevenueCar
 import ChartPlaceholderCard from "../features/Dashboard/components/ChartPlaceholderCard";
 import DashboardHeader from "../features/Dashboard/components/DashboardHeader";
 import { theme } from "../theme/theme";
+import type { BookingDto } from "../api/bookings";
 import { listBookings } from "../api/bookings";
 import { listDrivers } from "../api/drivers";
 import { listOrganizations } from "../api/organizations";
+import type { Driver } from "../features/partners/Drivers/components/drivers/types";
 import { queryKeys } from "../api/queryKeys";
 
 const HISTORY_DAYS = 30;
@@ -33,7 +35,7 @@ export default function DashboardPage() {
     queries: [
       {
         queryKey: queryKeys.bookings.list(),
-        queryFn: listBookings,
+        queryFn: () => listBookings(),
       },
       {
         queryKey: queryKeys.organizations.list("SECURITY"),
@@ -41,7 +43,7 @@ export default function DashboardPage() {
       },
       {
         queryKey: queryKeys.drivers.list(),
-        queryFn: listDrivers,
+        queryFn: () => listDrivers(),
       },
     ],
   });
@@ -60,11 +62,13 @@ export default function DashboardPage() {
         ? "Failed to load dashboard overview"
         : null;
 
-  const { bookingDateKeys, bookingDailyCounts, bodyguardDailyCounts } =
+  const { bookingDateKeys, bookingDailyCounts } =
     useMemo(() => {
-      const bookings = bookingsQuery.data ?? [];
+      const bookings: BookingDto[] =
+        (bookingsQuery.data as BookingDto[] | undefined) ?? [];
       const organizations = organizationsQuery.data ?? [];
-      const drivers = driversQuery.data ?? [];
+      const drivers: Driver[] =
+        (driversQuery.data as Driver[] | undefined) ?? [];
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -99,7 +103,9 @@ export default function DashboardPage() {
           securityOrganizationIds.has(driver.organizationId),
         )
         .forEach((driver) => {
-          const dayKey = driver.createdAt.slice(0, 10);
+          const createdAt = driver.createdAt;
+          if (!createdAt) return;
+          const dayKey = createdAt.slice(0, 10);
           bodyguardsCountByDay.set(
             dayKey,
             (bodyguardsCountByDay.get(dayKey) ?? 0) + 1,
@@ -141,24 +147,6 @@ export default function DashboardPage() {
       ],
     }),
     [bookingDateKeys, bookingDailyCounts],
-  );
-
-  const securityOverviewData = useMemo(
-    () => ({
-      labels: bookingDateKeys,
-      datasets: [
-        {
-          label: "Bodyguards",
-          backgroundColor: theme.palette.primary.main,
-          borderColor: theme.palette.primary.main,
-          data: bodyguardDailyCounts,
-          borderWidth: 2,
-          pointRadius: 0,
-          tension: 0,
-        },
-      ],
-    }),
-    [bookingDateKeys, bodyguardDailyCounts],
   );
 
   const options = {
@@ -284,16 +272,6 @@ export default function DashboardPage() {
             ariaLabel="Chart area for Bookings overview"
           >
             <Line data={bookingsOverviewData} options={options} />
-          </ChartPlaceholderCard>
-        </Box>
-
-        <Box sx={{ mt: 2 }}>
-          <ChartPlaceholderCard
-            title="Security Partners overview"
-            chartId="security-partners-overview-chart-container"
-            ariaLabel="Chart area for Security Partners overview"
-          >
-            <Line data={securityOverviewData} options={options} />
           </ChartPlaceholderCard>
         </Box>
       </Container>
