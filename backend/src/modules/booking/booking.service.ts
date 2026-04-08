@@ -36,6 +36,7 @@ type BookingWithRelations = Omit<
 export type PublicBookingStatus =
   | "pending"
   | "assigned"
+  | "in_progress"
   | "completed"
   | "cancelled";
 export type PublicPaymentStatus = "paid" | "unpaid";
@@ -64,6 +65,7 @@ export type PublicBooking = {
 
 function toPublicStatus(value: BookingStatus): PublicBookingStatus {
   if (value === "ASSIGNED") return "assigned";
+  if (value === "IN_PROGRESS") return "in_progress";
   if (value === "COMPLETED") return "completed";
   if (value === "CANCELLED") return "cancelled";
   return "pending";
@@ -71,6 +73,7 @@ function toPublicStatus(value: BookingStatus): PublicBookingStatus {
 
 function toDbStatus(value: PublicBookingStatus): BookingStatus {
   if (value === "assigned") return "ASSIGNED";
+  if (value === "in_progress") return "IN_PROGRESS";
   if (value === "completed") return "COMPLETED";
   if (value === "cancelled") return "CANCELLED";
   return "PENDING";

@@ -112,6 +112,10 @@ async function sendReplyPayload(
   to: string,
   reply: WhatsAppReplyPayload,
 ): Promise<void> {
+  if (reply.interactive) {
+    await graphSendMessage({ to, type: "interactive", interactive: reply.interactive });
+    return;
+  }
   await sendInteractiveReplyWithMenu(to, reply.body);
 }
 
@@ -149,11 +153,16 @@ export function extractFirstMessage(
   return messages[0] as WhatsAppIncomingMessage;
 }
 
-/** Text, reply button payload, або list row id. */
+/** Text, reply button payload, list row id, or interactive button reply id. */
 export function incomingUserInput(msg: WhatsAppIncomingMessage): string | null {
   const t = msg.type;
-  if (t === "interactive" && msg.interactive?.type === "list_reply") {
-    return msg.interactive.list_reply?.id?.trim() ?? null;
+  if (t === "interactive") {
+    if (msg.interactive?.type === "list_reply") {
+      return msg.interactive.list_reply?.id?.trim() ?? null;
+    }
+    if (msg.interactive?.type === "button_reply") {
+      return msg.interactive.button_reply?.id?.trim() ?? null;
+    }
   }
   if (t === "button" && msg.button) {
     const p = msg.button.payload?.trim();

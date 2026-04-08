@@ -3,10 +3,12 @@ import {
   parseCandidateDriverIdsJson,
 } from "../booking/booking.repository.js";
 import {
+  getBookingByIdService,
   listBookingsService,
   updateBookingService,
 } from "../booking/booking.service.js";
 import { getDriverByPhone } from "../driver/driver.service.js";
+import { formatBookingDateTimeZone } from "./formatBookingTime.js";
 import type {
   ProcessableMessage,
   WhatsAppReplyPayload,
@@ -35,8 +37,159 @@ export const WHATSAPP_REPLY_MESSAGES = {
   tripAccepted:
     "Ви прийняли поїздку. Статус: прийнято. Якщо це помилка — напишіть у підтримку.",
 
+  menu: "📋 Driver menu\n\nSelect an option below",
   defaultEcho: 'Ти написав: "{{text}}". Це відповідь за замовчуванням.',
 } as const;
+
+function formatTripDate(date: Date): string {
+  const { date: d, time } = formatBookingDateTimeZone(new Date(date));
+  return `${d} ${time}`;
+}
+
+async function buildTripsListReply(
+  driverId: string,
+): Promise<WhatsAppReplyPayload> {
+  const trips = await listBookingsService({ driverId });
+
+  if (trips.length === 0) {
+    return { body: "🚗 No trips found" };
+  }
+
+  const total = trips.length;
+  const active = trips.filter((t) => t.status === "assigned").length;
+  const upcoming = trips.filter((t) => t.status === "pending").length;
+
+  const rows = trips.slice(0, 10).map((trip) => ({
+    id: `TRIP_${trip.id}`.slice(0, 200),
+    title: `${trip.from} → ${trip.to}`.slice(0, 24),
+    description: `${formatTripDate(trip.bookingAt)} • ${trip.vehicleName ?? "No vehicle"}`.slice(0, 72),
+  }));
+
+  const bodyText = [
+    "🚗 Your trips",
+    "",
+    `Total: ${total}`,
+    `Active: ${active} • Upcoming: ${upcoming}`,
+    "",
+    "Select a trip to view details",
+  ].join("\n");
+
+  return {
+    body: bodyText,
+    interactive: {
+      type: "list",
+      body: { text: bodyText },
+      action: {
+        button: "View trips",
+        sections: [{ title: "Trips", rows }, {
+          title: "Navigation",
+          rows: [
+            {
+              id: "MENU_MAIN",
+              title: "⬅ Back to menu",
+              description: "",
+            },
+          ],
+        }],
+      },
+    },
+
+  };
+}
+
+async function buildTripDetailReply(
+  bookingId: string,
+): Promise<WhatsAppReplyPayload> {
+  const trip = await getBookingByIdService(bookingId);
+  if (!trip) {
+    return { body: "Trip not found." };
+  }
+
+  const { date, time } = formatBookingDateTimeZone(new Date(trip.bookingAt));
+
+  const bodyText = [
+    `🛫 *Trip Details*`,
+    ``,
+    `*Client:* ${trip.clientName} (${trip.clientPhone})`,
+    `*Email:* ${trip.clientEmail || "-"}`,
+    `*Type:* ${trip.tripType}`,
+    `*From → To:* ${trip.from} → ${trip.to}`,
+    `*Vehicle:* ${trip.vehicleName ?? "-"} (${trip.vehicleClass ?? "-"})`,
+    `*Booking Date:* ${date} ${time}`,
+    `*Duration:* ${trip.durationMin} min`,
+    `*Status:* ${trip.status}`,
+    `*Payment:* ${trip.paymentStatus}`,
+    `*Notes:* ${trip.notesForDriver || "-"}`,
+  ].join("\n");
+
+  const buttons: { type: "reply"; reply: { id: string; title: string } }[] = [];
+
+  if (trip.status === "assigned") {
+    buttons.push({
+      type: "reply",
+      reply: { id: `START_${trip.id}`, title: "🚀 Start Trip" },
+    });
+  }
+
+  buttons.push({
+    type: "reply",
+    reply: { id: "TRIPS", title: "🚗 All Trips" },
+  });
+
+  return {
+    body: bodyText,
+    interactive: {
+      type: "button",
+      body: { text: bodyText },
+      action: { buttons },
+    },
+  };
+}
+
+const START_WINDOW_MIN = 30;
+
+function canStartTrip(bookingAt: Date): boolean {
+  const diffMin = (new Date(bookingAt).getTime() - Date.now()) / 60_000;
+  return diffMin <= START_WINDOW_MIN;
+}
+
+async function handleStartTrip(
+  message: ProcessableMessage,
+  bookingId: string,
+): Promise<WhatsAppReplyPayload> {
+  const booking = await findBookingById(bookingId);
+  if (!booking) {
+    return { body: "Trip not found." };
+  }
+
+  const driver = await getDriverByPhone(message.from);
+  if (!driver) {
+    return { body: "Driver not found." };
+  }
+
+  if (booking.driverId !== driver.id) {
+    return { body: "This trip is not assigned to you." };
+  }
+
+  if (booking.status === "IN_PROGRESS") {
+    return { body: "Trip already in progress." };
+  }
+
+  if (booking.status !== "ASSIGNED") {
+    return { body: "This trip cannot be started (current status: " + booking.status.toLowerCase() + ")." };
+  }
+
+  if (!canStartTrip(booking.bookingAt)) {
+
+    return {
+      body: "⏳ Too early to start this trip.\nYou can start it 30 minutes before pickup.",
+    };
+  }
+
+  await updateBookingService(bookingId, { status: "in_progress" });
+
+  return { body: "🚀 Trip started.\nDrive safely!" };
+}
 
 function parseAcceptBookingIdFromListRow(text: string): string | null {
   const id = text.split("_")[1]?.trim();
@@ -49,6 +202,22 @@ export async function buildReplyPayload(
 ): Promise<WhatsAppReplyPayload> {
   const text = message.text?.trim();
   const lower = text?.toLowerCase();
+
+  if (text?.startsWith("TRIP_")) {
+    const bookingId = text.slice("TRIP_".length).trim();
+    if (!bookingId) {
+      return { body: "Trip ID not specified." };
+    }
+    return buildTripDetailReply(bookingId);
+  }
+
+  if (text?.startsWith("START_")) {
+    const bookingId = text.slice("START_".length).trim();
+    if (!bookingId) {
+      return { body: "Trip ID not specified." };
+    }
+    return handleStartTrip(message, bookingId);
+  }
 
   if (text?.startsWith("ACCEPT")) {
     const bookingId = parseAcceptBookingIdFromListRow(text);
@@ -179,7 +348,33 @@ export async function buildReplyPayload(
   }
 
   if (text === "CURRENT_TRIP") {
-    return { body: WHATSAPP_REPLY_MESSAGES.currentTrip };
+    const driver = await getDriverByPhone(message.from);
+    if (!driver) {
+      return { body: "Driver not found." };
+    }
+
+    const trips = await listBookingsService({ driverId: driver.id });
+    const current = trips.find((t) => t.status === "in_progress");
+
+    if (!current) {
+      return { body: "📍 No active trip right now." };
+    }
+
+    const { date, time } = formatBookingDateTimeZone(new Date(current.bookingAt));
+
+    const body = [
+      `📍 *Current Trip*`,
+      ``,
+      `*Client:* ${current.clientName} (${current.clientPhone})`,
+      `*From → To:* ${current.from} → ${current.to}`,
+      `*Vehicle:* ${current.vehicleName ?? "-"} (${current.vehicleClass ?? "-"})`,
+      `*Booking Date:* ${date} ${time}`,
+      `*Duration:* ${current.durationMin} min`,
+      `*Payment:* ${current.paymentStatus}`,
+      `*Notes:* ${current.notesForDriver || "-"}`,
+    ].join("\n");
+
+    return { body };
   }
 
   if (text === "EARNING") {
@@ -188,33 +383,10 @@ export async function buildReplyPayload(
 
   if (text === "TRIPS") {
     const driver = await getDriverByPhone(message.from);
-
     if (!driver) {
       return { body: "Driver not found." };
     }
-
-    const trips = await listBookingsService({ driverId: driver.id });
-
-    const tripsMessage = trips
-      .map(
-        (trip, idx) => `
-🛫 *Trip #${idx + 1}*
-
-*Client:* ${trip.clientName} (${trip.clientPhone})
-*Email:* ${trip.clientEmail ?? "-"}
-*Type:* ${trip.tripType}
-*From → To:* ${trip.from} → ${trip.to}
-*Vehicle:* ${trip.vehicleName} (${trip.vehicleClass})
-*Booking Date:* ${new Date(trip.bookingAt).toLocaleString()}
-*Duration:* ${trip.durationMin} min
-*Status:* ${trip.status}
-*Payment:* ${trip.paymentStatus}
-*Notes:* ${trip.notesForDriver ?? "-"}
-`,
-      )
-      .join("\n-----------------\n");
-
-    return { body: tripsMessage };
+    return buildTripsListReply(driver.id);
   }
 
   if (text === "PROFILE") {
@@ -261,6 +433,10 @@ Available for Airport Transfers: ${driver.acceptsAirportTransfers ? "✅" : "❌
   }
   if (text === "OFFLINE") {
     return { body: WHATSAPP_REPLY_MESSAGES.offline };
+  }
+
+  if (text?.startsWith("MENU_MAIN")) {
+    return { body: WHATSAPP_REPLY_MESSAGES.menu };
   }
 
   if (
