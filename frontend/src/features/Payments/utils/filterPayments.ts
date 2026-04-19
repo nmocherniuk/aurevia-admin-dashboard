@@ -1,4 +1,4 @@
-import type { Payment } from "../data/dummyPayments";
+import type { Payment } from "../../../api/payments";
 import type { PaymentsFilterState } from "../constants/filters";
 
 export function filterPayments(

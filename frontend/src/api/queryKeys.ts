@@ -34,6 +34,10 @@ export const queryKeys = {
     all: ["pricing"] as const,
     list: () => [...queryKeys.pricing.all, "list"] as const,
   },
+  payments: {
+    all: ["payments"] as const,
+    list: () => [...queryKeys.payments.all, "list"] as const,
+  },
   securityAgents: {
     all: ["securityAgents"] as const,
     byOrganization: (organizationId: string) =>

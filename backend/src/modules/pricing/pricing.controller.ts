@@ -1,6 +1,11 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type { AuthedRequest } from "../../middleware/requireAuth.js";
-import { listVehiclePricing, saveVehiclePricing } from "./pricing.service.js";
+import {
+  getPublicVehiclePriceQuote,
+  listVehiclePricing,
+  saveVehiclePricing,
+} from "./pricing.service.js";
+import type { PublicPricingQuoteQuery } from "./pricing.schemas.js";
 
 export async function listPricingController(_req: AuthedRequest, res: Response) {
   try {
@@ -23,6 +28,34 @@ export async function savePricingController(req: AuthedRequest, res: Response) {
     return res.json({ ok: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Save failed";
+    return res.status(500).json({ message });
+  }
+}
+
+export async function publicPricingQuoteController(req: Request, res: Response) {
+  try {
+    const query = req.query as unknown as PublicPricingQuoteQuery;
+
+    const input: Parameters<typeof getPublicVehiclePriceQuote>[0] = {
+      vehicleId: query.vehicleId,
+      tripType: query.tripType,
+    };
+    if (query.distanceKm != null) input.distanceKm = query.distanceKm;
+    if (query.durationMin != null) input.durationMin = query.durationMin;
+    if (query.fromLat != null) input.fromLat = query.fromLat;
+    if (query.fromLon != null) input.fromLon = query.fromLon;
+    if (query.toLat != null) input.toLat = query.toLat;
+    if (query.toLon != null) input.toLon = query.toLon;
+
+    const quote = await getPublicVehiclePriceQuote(input);
+
+    if (!quote) {
+      return res.status(404).json({ message: "Vehicle not found" });
+    }
+
+    return res.json({ quote });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Quote failed";
     return res.status(500).json({ message });
   }
 }

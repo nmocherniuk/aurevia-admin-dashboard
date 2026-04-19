@@ -9,6 +9,7 @@ import vehicleRoutes from "./vehicle.routes.js";
 import securityAgentRoutes from "./securityAgent.routes.js";
 import whatsappRoutes from "./whatsapp.routes.js";
 import publicBookingRoutes from "./publicBooking.routes.js";
+import paymentsRoutes from "./payments.routes.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 import { validateQuery } from "../middleware/validateQuery.js";
 import { driverBookingsGroupedQuerySchema } from "../modules/booking/booking.schemas.js";
@@ -27,6 +28,7 @@ routes.use("/drivers", driverRoutes);
 routes.use("/security-agents", securityAgentRoutes);
 routes.use("/vehicles", vehicleRoutes);
 routes.use("/pricing", pricingRoutes);
+routes.use("/payments", paymentsRoutes);
 routes.use("/bookings", bookingRoutes);
 routes.get(
   "/driver/bookings",

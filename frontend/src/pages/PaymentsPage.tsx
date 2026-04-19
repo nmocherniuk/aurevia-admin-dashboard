@@ -1,19 +1,21 @@
-import { Box, Container } from "@mui/material";
+import { Box, Container, CircularProgress, Alert } from "@mui/material";
 import { useMemo, useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import ScheduleIcon from "@mui/icons-material/Schedule";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import PaymentsHeader from "../features/Payments/components/PaymentsHeader";
 import PaymentsFilters from "../features/Payments/components/PaymentsFilters";
 import PaymentsTable from "../features/Payments/components/PaymentsTable";
 import PaymentDetailModal from "../features/Payments/components/PaymentDetailModal";
 import CardStat from "../components/CardStat";
-import { DUMMY_PAYMENTS } from "../features/Payments/data/dummyPayments";
-import type { Payment } from "../features/Payments/data/dummyPayments";
+import type { Payment } from "../api/payments";
+import { listPayments } from "../api/payments";
+import { queryKeys } from "../api/queryKeys";
 import { DEFAULT_PAYMENTS_FILTERS } from "../features/Payments/constants/filters";
 import type { PaymentsFilterState } from "../features/Payments/constants/filters";
 import { filterPayments } from "../features/Payments/utils/filterPayments";
+import { formatMoney } from "../features/Payments/utils/formatMoney";
 
 export default function PaymentsPage() {
   const [filters, setFilters] = useState<PaymentsFilterState>(
@@ -21,20 +23,44 @@ export default function PaymentsPage() {
   );
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 
+  const {
+    data: payments = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: queryKeys.payments.list(),
+    queryFn: listPayments,
+  });
+
   const filteredPayments = useMemo(
-    () => filterPayments(DUMMY_PAYMENTS, filters),
-    [filters],
+    () => filterPayments(payments, filters),
+    [payments, filters],
   );
 
-  const stats = useMemo(
-    () => [
-      { label: "Today Revenue", value: "£1,240", icon: AttachMoneyIcon },
-      { label: "Pending", value: "12", icon: ScheduleIcon },
-      { label: "To Capture", value: "3", icon: CreditCardIcon },
-      { label: "Failed", value: "2", icon: ErrorOutlineIcon },
-    ],
-    [],
-  );
+  const stats = useMemo(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    let todayRevenue = 0;
+    let unpaid = 0;
+    let paid = 0;
+    for (const p of payments) {
+      if (p.paymentStatus === "unpaid") unpaid += 1;
+      if (p.paymentStatus === "paid") paid += 1;
+      if (p.paymentStatus === "paid" && p.date === today) {
+        todayRevenue += p.amount;
+      }
+    }
+    const currency = payments[0]?.currency ?? "EUR";
+    return [
+      {
+        label: "Today Revenue",
+        value: formatMoney(todayRevenue, currency),
+        icon: AttachMoneyIcon,
+      },
+      { label: "Unpaid", value: String(unpaid), icon: HourglassEmptyIcon },
+      { label: "Paid", value: String(paid), icon: CheckCircleOutlineIcon },
+    ];
+  }, [payments]);
 
   const handleFilterChange = useCallback(
     <K extends keyof PaymentsFilterState>(
@@ -54,13 +80,25 @@ export default function PaymentsPage() {
       >
         <PaymentsHeader />
 
+        {isError && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error instanceof Error ? error.message : "Failed to load payments"}
+          </Alert>
+        )}
+
+        {isLoading && (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+            <CircularProgress />
+          </Box>
+        )}
+
         <Box
           sx={{
             mt: 2,
             display: "grid",
             gridTemplateColumns: {
               xs: "1fr 1fr",
-              md: "repeat(4, minmax(0, 1fr))",
+              md: "repeat(3, minmax(0, 1fr))",
             },
             gap: 2,
           }}
@@ -77,7 +115,7 @@ export default function PaymentsPage() {
           />
         </Box>
 
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ mt: 2, display: isLoading ? "none" : "block" }}>
           <PaymentsTable
             payments={filteredPayments}
             onPaymentClick={setSelectedPayment}

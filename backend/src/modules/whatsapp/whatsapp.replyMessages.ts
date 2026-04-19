@@ -135,26 +135,19 @@ async function buildPendingTripsReply(
   driverId: string,
 ): Promise<WhatsAppReplyPayload> {
   const all = await listBookingsRows();
-  const now = Date.now();
   const pending = all.filter((t) => {
     if (t.status !== "PENDING") return false;
-    if (t.driverId === driverId) return true;
     const rowCandidates = parseCandidateDriverIdsJson(t.candidateDriverIds);
     return rowCandidates.some(
       (c) => c.driverId === driverId && c.status.toLowerCase() === "pending",
     );
   });
 
-  const activePending = pending.filter((t) => {
-    if (!t.driverResponseDeadline) return true;
-    return new Date(t.driverResponseDeadline).getTime() > now;
-  });
-
-  if (!activePending.length) {
+  if (!pending.length) {
     return { body: "📋 No pending trips requiring response." };
   }
 
-  const rows = activePending.slice(0, 10).map((trip) => ({
+  const rows = pending.slice(0, 10).map((trip) => ({
     id: `PENDING_${trip.id}`.slice(0, 200),
     title: `${trip.from} → ${trip.to}`.slice(0, 24),
     description: `Accept until: ${formatDeadlineTime(trip.driverResponseDeadline ?? null)}`.slice(
@@ -293,6 +286,15 @@ export async function buildReplyPayload(
     return buildTripDetailReply(bookingId);
   }
 
+  /** Must run before `PENDING_*` row handler: nav id is `PENDING_TRIPS` (also starts with PENDING_). */
+  if (text === "PENDING_TRIPS") {
+    const driver = await getDriverByPhone(message.from);
+    if (!driver) {
+      return { body: "Driver not found." };
+    }
+    return buildPendingTripsReply(driver.id);
+  }
+
   if (text?.startsWith("PENDING_")) {
     const bookingId = text.slice("PENDING_".length).trim();
     if (!bookingId) {
@@ -301,6 +303,23 @@ export async function buildReplyPayload(
     const booking = await findBookingById(bookingId);
     if (!booking) {
       return { body: "Trip not found." };
+    }
+
+    const driver = await getDriverByPhone(message.from);
+    if (!driver) {
+      return { body: "Driver not found." };
+    }
+    if (booking.status !== "PENDING") {
+      return { body: "This offer is no longer pending." };
+    }
+    const candidates = parseCandidateDriverIdsJson(booking.candidateDriverIds);
+    const mine = candidates.find(
+      (c) =>
+        c.driverId === driver.id &&
+        c.status.toLowerCase() === "pending",
+    );
+    if (!mine) {
+      return { body: "You have no pending offer for this trip." };
     }
 
     const { date, time } = formatBookingDateTimeZone(new Date(booking.bookingAt));
@@ -584,14 +603,6 @@ export async function buildReplyPayload(
       return { body: "Driver not found." };
     }
     return buildTripsListReply(driver.id);
-  }
-
-  if (text === "PENDING_TRIPS") {
-    const driver = await getDriverByPhone(message.from);
-    if (!driver) {
-      return { body: "Driver not found." };
-    }
-    return buildPendingTripsReply(driver.id);
   }
 
   if (text === "PROFILE") {

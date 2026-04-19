@@ -7,14 +7,12 @@ import {
 import Chip from "@mui/material/Chip";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import type { Payment, PaymentStatus } from "../data/dummyPayments";
+import type { Payment, PaymentStatus } from "../../../api/payments";
+import { formatMoney } from "../utils/formatMoney";
 
 const statusColors: Record<PaymentStatus, { bg: string; color: string }> = {
-  pending: { bg: "rgba(245, 158, 11, 0.2)", color: "#F59E0B" },
-  authorized: { bg: "rgba(59, 130, 246, 0.2)", color: "#3b82f6" },
+  unpaid: { bg: "rgba(251, 191, 36, 0.25)", color: "#EAB308" },
   paid: { bg: "rgba(34, 197, 94, 0.2)", color: "#22c55e" },
-  failed: { bg: "rgba(239, 68, 68, 0.2)", color: "#EF4444" },
-  refunded: { bg: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" },
 };
 
 type Props = {
@@ -96,7 +94,7 @@ export default function PaymentCard({ payment: p, onView, onOpenMenu }: Props) {
         }}
       >
         <Typography variant="body2" sx={{ fontWeight: 600, color: "text.primary" }}>
-          £{p.amount.toFixed(2)}
+          {formatMoney(p.amount, p.currency)}
         </Typography>
         <Chip
           label={p.paymentStatus}

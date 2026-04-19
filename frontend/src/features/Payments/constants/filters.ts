@@ -22,11 +22,8 @@ export type FilterOption = { value: string; label: string };
 
 export const PAYMENT_STATUS_OPTIONS: FilterOption[] = [
   { value: FILTER_ALL, label: "Status: All" },
-  { value: "pending", label: "Pending" },
-  { value: "authorized", label: "Authorized" },
+  { value: "unpaid", label: "Unpaid" },
   { value: "paid", label: "Paid" },
-  { value: "failed", label: "Failed" },
-  { value: "refunded", label: "Refunded" },
 ];
 
 export const DRIVER_FILTER_OPTIONS: FilterOption[] = [

@@ -29,7 +29,7 @@ import { getDriversByVehicleId } from "../driver/driver.service.js";
 export type { PublicVehicleClass };
 
 /** Repository payloads omit `whatsappPaidTemplateSentAt` in SELECT for DBs without that migration. */
-type BookingWithRelations = Omit<
+export type BookingPricingRow = Omit<
   Bookings,
   "driver" | "vehicle" | "whatsappPaidTemplateSentAt"
 > & {
@@ -92,7 +92,7 @@ function toDbPaymentStatus(value: PublicPaymentStatus): PaymentStatus {
   return value === "paid" ? "PAID" : "UNPAID";
 }
 
-function toPublicBooking(row: BookingWithRelations): PublicBooking {
+function toPublicBooking(row: BookingPricingRow): PublicBooking {
   return {
     id: row.id,
     clientName: row.clientName,
@@ -260,7 +260,8 @@ export async function getBookingByIdService(id: string) {
 const DEFAULT_PER_HOUR_EUR = 120;
 
 /** Hourly estimate from vehicle pricing (no distance in DB). */
-async function estimateBookingPriceEur(row: BookingWithRelations): Promise<number> {
+/** Hourly estimate from vehicle pricing (no distance in DB). Exported for admin payments list. */
+export async function estimateBookingPriceEur(row: BookingPricingRow): Promise<number> {
   const hours = row.durationMin / 60;
   let perHour = DEFAULT_PER_HOUR_EUR;
   const vehicleId =

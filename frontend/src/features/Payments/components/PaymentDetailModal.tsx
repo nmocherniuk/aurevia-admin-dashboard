@@ -1,6 +1,7 @@
 import { Typography, Box } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import type { Payment } from "../data/dummyPayments";
+import type { Payment } from "../../../api/payments";
+import { formatMoney } from "../utils/formatMoney";
 import { sectionLabelSx } from "../../../components/ui/modalStyles";
 import DetailField from "../../../components/DetailField";
 import BaseModal from "../../../components/BaseModal";
@@ -59,7 +60,12 @@ export default function PaymentDetailModal({
 
       <DetailField
         label="Amount"
-        value={`£${payment.amount.toFixed(2)}`}
+        value={formatMoney(payment.amount, payment.currency)}
+        emptyAsDash={false}
+      />
+      <DetailField
+        label="Stripe PaymentIntent"
+        value={payment.stripePaymentIntentId ?? "—"}
         emptyAsDash={false}
       />
       <DetailField

@@ -2,8 +2,7 @@ import { sendEmail } from "../../lib/email.js";
 import { signPaymentToken } from "../../lib/paymentToken.js";
 import { formatBookingDateTimeZone } from "../whatsapp/formatBookingTime.js";
 
-const FRONTEND_ORIGIN =
-  process.env.FRONTEND_ORIGIN || "http://localhost:5173";
+const FRONTEND_ORIGIN = "http://localhost:3000";
 
 type BookingEmailData = {
   bookingId: string;
@@ -100,7 +99,7 @@ export async function sendBookingAcceptedEmail(
   }
 
   const token = signPaymentToken(booking.bookingId);
-  const paymentUrl = `${FRONTEND_ORIGIN}/pay/${token}`;
+  const paymentUrl = `${FRONTEND_ORIGIN}/security-payment/${token}`;
 
   const html = wrapLayout(`
     <h2 style="margin:0 0 8px;color:#141414">Your trip is confirmed!</h2>
