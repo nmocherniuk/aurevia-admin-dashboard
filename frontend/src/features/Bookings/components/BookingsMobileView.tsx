@@ -7,8 +7,15 @@ import { toDateKey, getDateLabel } from "../utils/dateUtils";
 import type { Booking } from "./BookingsCalendar/data/dummyBookings";
 import type { BookingsFilterState } from "../constants/filters";
 import { colors } from "../../../theme/colors";
+import { bookingContent } from "../../../content/booking";
+import type { ComponentType } from "react";
 
-type Stat = { label: string; value: string };
+type Stat = {
+  key: string;
+  label: string;
+  value: string;
+  icon: ComponentType<{ sx?: object }>;
+};
 
 type BookingsMobileViewProps = {
   scrollRef: React.RefObject<HTMLDivElement | null>;
@@ -25,6 +32,7 @@ type BookingsMobileViewProps = {
   ) => void;
   onNewBooking: () => void;
   onBookingClick: (booking: Booking) => void;
+  activeTransfersToday: number;
 };
 
 export default function BookingsMobileView({
@@ -39,6 +47,7 @@ export default function BookingsMobileView({
   onFilterChange,
   onNewBooking,
   onBookingClick,
+  activeTransfersToday,
 }: BookingsMobileViewProps) {
   return (
     <Box
@@ -54,7 +63,10 @@ export default function BookingsMobileView({
     >
       <Container maxWidth={false} sx={{ px: 0, pb: 3 }}>
         <Stack spacing={2.5} sx={{ pt: 1 }}>
-          <BookingsHeader onNewBooking={onNewBooking} />
+          <BookingsHeader
+            onNewBooking={onNewBooking}
+            activeTransfersToday={activeTransfersToday}
+          />
           <BookingStats items={stats} />
           <BookingsFilters filters={filters} onFilterChange={onFilterChange} />
         </Stack>
@@ -62,7 +74,7 @@ export default function BookingsMobileView({
           {allDates.map((date) => {
             const key = toDateKey(date);
             const bookings = bookingsByDate[key] ?? [];
-            const shortDate = date.toLocaleDateString(undefined, {
+            const shortDate = date.toLocaleDateString("fr-FR", {
               day: "numeric",
               month: "short",
             });
@@ -106,7 +118,7 @@ export default function BookingsMobileView({
                 </Stack>
                 {bookings.length === 0 ? (
                   <Typography variant="body2" color="text.secondary" sx={{ pl: 0.5 }}>
-                    Немає бронювань
+                    {bookingContent.mobile.emptyDay}
                   </Typography>
                 ) : (
                   <Stack spacing={1.5}>

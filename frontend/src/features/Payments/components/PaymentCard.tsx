@@ -9,6 +9,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import type { Payment, PaymentStatus } from "../../../api/payments";
 import { formatMoney } from "../utils/formatMoney";
+import { paymentStatusChipLabel } from "../../../content/payments";
+import { commonContent } from "../../../content/common";
 
 const statusColors: Record<PaymentStatus, { bg: string; color: string }> = {
   unpaid: { bg: "rgba(251, 191, 36, 0.25)", color: "#EAB308" },
@@ -72,7 +74,7 @@ export default function PaymentCard({ payment: p, onView, onOpenMenu }: Props) {
         <IconButton
           size="small"
           sx={{ color: "text.secondary", flexShrink: 0 }}
-          aria-label="actions"
+          aria-label={commonContent.dataTable.actionsColumn}
           onClick={(e) => {
             e.stopPropagation();
             onOpenMenu(e);
@@ -97,7 +99,7 @@ export default function PaymentCard({ payment: p, onView, onOpenMenu }: Props) {
           {formatMoney(p.amount, p.currency)}
         </Typography>
         <Chip
-          label={p.paymentStatus}
+          label={paymentStatusChipLabel(p.paymentStatus)}
           size="small"
           sx={{
             bgcolor: statusStyle.bg,

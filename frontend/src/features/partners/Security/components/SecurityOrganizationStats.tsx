@@ -3,6 +3,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import GroupIcon from "@mui/icons-material/Group";
 import CardStat from "../../../../components/CardStat";
+import { securityPartnersContent } from "../../../../content/securityPartners";
 
 type Props = {
   totalOrganizations: number;
@@ -17,17 +18,17 @@ export default function SecurityOrganizationStats({
 }: Props) {
   const stats = [
     {
-      label: "Organizations",
+      label: securityPartnersContent.stats.organizations,
       value: String(totalOrganizations),
       icon: BusinessIcon,
     },
     {
-      label: "Active",
+      label: securityPartnersContent.stats.active,
       value: String(activeOrganizations),
       icon: GroupIcon,
     },
     {
-      label: "Inactive",
+      label: securityPartnersContent.stats.inactive,
       value: String(inactiveOrganizations),
       icon: PersonOffIcon,
     },

@@ -29,6 +29,7 @@ import {
 } from "./fleetManagementForm.types";
 import { fleetToFormValues } from "./fleetManagementForm.mapper";
 import { FLEET_STATUS_LABELS } from "../../data/dummyFleet";
+import { fleetClassLabel, vehiclesContent } from "../../../../content/vehicles";
 
 type Props = {
   open: boolean;
@@ -159,10 +160,10 @@ export default function FleetManagementModal({
             sx={{ fontWeight: 700, color: "text.primary" }}
           >
             {readOnly
-              ? "Fleet details"
+              ? vehiclesContent.modal.titles.readOnly
               : vehicle
-                ? "Edit Fleet"
-                : "Add New Fleet"}
+                ? vehiclesContent.modal.titles.edit
+                : vehiclesContent.modal.titles.create}
           </Typography>
         </>
       }
@@ -185,7 +186,7 @@ export default function FleetManagementModal({
                 },
               }}
             >
-              Cancel
+              {vehiclesContent.modal.cancel}
             </Button>
             <Button
               variant="contained"
@@ -201,28 +202,37 @@ export default function FleetManagementModal({
                 px: 2,
               }}
             >
-              {vehicle ? "Save Fleet" : "Add Fleet"}
+              {vehicle
+                ? vehiclesContent.modal.submitSave
+                : vehiclesContent.modal.submitAdd}
             </Button>
           </>
         ) : undefined
       }
     >
-      <Typography sx={sectionLabelSx}>Vehicle ID</Typography>
+      <Typography sx={sectionLabelSx}>
+        {vehiclesContent.modal.sections.vehicleId}
+      </Typography>
       <Typography variant="body1" sx={valueBoxSx}>
-        #{vehicle?.id ?? "—"}
+        #{vehicle?.id ?? vehiclesContent.table.emptyValue}
       </Typography>
 
-      <Typography sx={sectionLabelSx}>Vehicle Information</Typography>
+      <Typography sx={sectionLabelSx}>
+        {vehiclesContent.modal.sections.vehicleInformation}
+      </Typography>
       <Grid container spacing={1.5}>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Vehicle name" value={formValues.vehicleName} />
+            <DetailField
+              label={vehiclesContent.modal.fields.vehicleName.label}
+              value={formValues.vehicleName}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Vehicle name"
-              placeholder="Enter vehicle name"
+              label={vehiclesContent.modal.fields.vehicleName.label}
+              placeholder={vehiclesContent.modal.fields.vehicleName.placeholder}
               value={formValues.vehicleName}
               onChange={handleChange("vehicleName")}
               sx={modalTextFieldSx}
@@ -231,13 +241,16 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Year" value={formValues.year} />
+            <DetailField
+              label={vehiclesContent.modal.fields.year.label}
+              value={formValues.year}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Year"
-              placeholder="e.g. 2024"
+              label={vehiclesContent.modal.fields.year.label}
+              placeholder={vehiclesContent.modal.fields.year.placeholder}
               value={formValues.year}
               onChange={handleChange("year")}
               sx={modalTextFieldSx}
@@ -246,13 +259,16 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Color" value={formValues.color} />
+            <DetailField
+              label={vehiclesContent.modal.fields.color.label}
+              value={formValues.color}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Color"
-              placeholder="Enter vehicle color"
+              label={vehiclesContent.modal.fields.color.label}
+              placeholder={vehiclesContent.modal.fields.color.placeholder}
               value={formValues.color}
               onChange={handleChange("color")}
               sx={modalTextFieldSx}
@@ -262,15 +278,15 @@ export default function FleetManagementModal({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="License plate"
+              label={vehiclesContent.modal.fields.licensePlate.label}
               value={formValues.licensePlate}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="License plate"
-              placeholder="Enter license plate"
+              label={vehiclesContent.modal.fields.licensePlate.label}
+              placeholder={vehiclesContent.modal.fields.licensePlate.placeholder}
               value={formValues.licensePlate}
               onChange={handleChange("licensePlate")}
               sx={modalTextFieldSx}
@@ -279,13 +295,16 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
-            <DetailField label="Image URL (optional)" value={formValues.imageUrl} />
+            <DetailField
+              label={vehiclesContent.modal.fields.imageUrl.label}
+              value={formValues.imageUrl}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Image URL (optional)"
-              placeholder="https://example.com/car.jpg"
+              label={vehiclesContent.modal.fields.imageUrl.label}
+              placeholder={vehiclesContent.modal.fields.imageUrl.placeholder}
               value={formValues.imageUrl}
               onChange={handleChange("imageUrl")}
               sx={modalTextFieldSx}
@@ -294,15 +313,18 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
-            <DetailField label="Description" value={formValues.description} />
+            <DetailField
+              label={vehiclesContent.modal.fields.description.label}
+              value={formValues.description}
+            />
           ) : (
             <TextField
               fullWidth
               multiline
               minRows={2}
               size="small"
-              label="Description"
-              placeholder="Short marketing description for landing"
+              label={vehiclesContent.modal.fields.description.label}
+              placeholder={vehiclesContent.modal.fields.description.placeholder}
               value={formValues.description}
               onChange={handleChange("description")}
               sx={modalTextFieldSx}
@@ -312,8 +334,8 @@ export default function FleetManagementModal({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Class"
-              value={formValues.class}
+              label={vehiclesContent.modal.fields.class.label}
+              value={fleetClassLabel(formValues.class)}
               emptyAsDash={false}
             />
           ) : (
@@ -321,14 +343,14 @@ export default function FleetManagementModal({
               fullWidth
               size="small"
               select
-              label="Class"
+              label={vehiclesContent.modal.fields.class.label}
               value={formValues.class}
               onChange={handleChange("class")}
               sx={modalTextFieldSx}
             >
               {FLEET_CLASSES.map((c) => (
                 <MenuItem key={c} value={c}>
-                  {c}
+                  {fleetClassLabel(c)}
                 </MenuItem>
               ))}
             </TextField>
@@ -337,7 +359,7 @@ export default function FleetManagementModal({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Status"
+              label={vehiclesContent.modal.fields.status.label}
               value={FLEET_STATUS_LABELS[formValues.status]}
               emptyAsDash={false}
             />
@@ -346,7 +368,7 @@ export default function FleetManagementModal({
               fullWidth
               size="small"
               select
-              label="Status"
+              label={vehiclesContent.modal.fields.status.label}
               value={formValues.status}
               onChange={handleChange("status")}
               sx={modalTextFieldSx}
@@ -361,12 +383,15 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Passengers" value={formValues.passengers} />
+            <DetailField
+              label={vehiclesContent.modal.fields.passengers.label}
+              value={formValues.passengers}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Passengers"
+              label={vehiclesContent.modal.fields.passengers.label}
               type="number"
               inputProps={{ min: 1 }}
               value={formValues.passengers}
@@ -377,12 +402,15 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Baggage count" value={formValues.baggageCount} />
+            <DetailField
+              label={vehiclesContent.modal.fields.baggageCount.label}
+              value={formValues.baggageCount}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Baggage count"
+              label={vehiclesContent.modal.fields.baggageCount.label}
               type="number"
               inputProps={{ min: 0 }}
               value={formValues.baggageCount}
@@ -393,13 +421,16 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Vehicle type" value={formValues.vehicleType} />
+            <DetailField
+              label={vehiclesContent.modal.fields.vehicleType.label}
+              value={formValues.vehicleType}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Vehicle type"
-              placeholder="Luxury Sedan"
+              label={vehiclesContent.modal.fields.vehicleType.label}
+              placeholder={vehiclesContent.modal.fields.vehicleType.placeholder}
               value={formValues.vehicleType}
               onChange={handleChange("vehicleType")}
               sx={modalTextFieldSx}
@@ -408,13 +439,16 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Transmission" value={formValues.transmission} />
+            <DetailField
+              label={vehiclesContent.modal.fields.transmission.label}
+              value={formValues.transmission}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Transmission"
-              placeholder="Automatic"
+              label={vehiclesContent.modal.fields.transmission.label}
+              placeholder={vehiclesContent.modal.fields.transmission.placeholder}
               value={formValues.transmission}
               onChange={handleChange("transmission")}
               sx={modalTextFieldSx}
@@ -423,13 +457,16 @@ export default function FleetManagementModal({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Interior" value={formValues.interior} />
+            <DetailField
+              label={vehiclesContent.modal.fields.interior.label}
+              value={formValues.interior}
+            />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Interior"
-              placeholder="Leather"
+              label={vehiclesContent.modal.fields.interior.label}
+              placeholder={vehiclesContent.modal.fields.interior.placeholder}
               value={formValues.interior}
               onChange={handleChange("interior")}
               sx={modalTextFieldSx}
@@ -439,15 +476,15 @@ export default function FleetManagementModal({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Amenities (comma separated)"
+              label={vehiclesContent.modal.fields.amenitiesText.label}
               value={formValues.amenitiesText}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Amenities (comma separated)"
-              placeholder="Climate control, Wi-Fi onboard, Phone chargers"
+              label={vehiclesContent.modal.fields.amenitiesText.label}
+              placeholder={vehiclesContent.modal.fields.amenitiesText.placeholder}
               value={formValues.amenitiesText}
               onChange={handleChange("amenitiesText")}
               sx={modalTextFieldSx}
@@ -455,7 +492,9 @@ export default function FleetManagementModal({
           )}
         </Grid>
       </Grid>
-      <Typography sx={sectionLabelSx}>Entity binding</Typography>
+      <Typography sx={sectionLabelSx}>
+        {vehiclesContent.modal.sections.entityBinding}
+      </Typography>
       {readOnly ? (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
           {formValues.driverBindings.map((row, index) => (
@@ -463,7 +502,9 @@ export default function FleetManagementModal({
               <Grid container spacing={1.5}>
                 <Grid size={{ xs: 12, md: 6 }}>
                   <DetailField
-                    label="Organization (optional)"
+                    label={
+                      vehiclesContent.modal.fields.organizationOptional.label
+                    }
                     value={
                       organizations.find((o) => o.id === row.organizationId)
                         ?.name ??
@@ -473,7 +514,7 @@ export default function FleetManagementModal({
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
                   <DetailField
-                    label="Driver (optional)"
+                    label={vehiclesContent.modal.fields.driverOptional.label}
                     value={
                       row.driverId
                         ? (drivers.find((d) => d.id === row.driverId)?.name ??
@@ -496,18 +537,20 @@ export default function FleetManagementModal({
                     fullWidth
                     size="small"
                     select
-                    label="Organization (optional)"
+                    label={
+                      vehiclesContent.modal.fields.organizationOptional.label
+                    }
                     value={row.organizationId}
                     onChange={handleBindingOrgSelect(index)}
                     helperText={
                       index === 0 && !organizations.length
-                        ? "No chauffeur organizations yet — create one in Partners first"
+                        ? vehiclesContent.modal.binding.noOrganizationsHelper
                         : ""
                     }
                     sx={modalTextFieldSx}
                   >
                     <MenuItem value="">
-                      <em>None</em>
+                      <em>{vehiclesContent.modal.binding.none}</em>
                     </MenuItem>
                     {organizations.map((org) => (
                       <MenuItem key={org.id} value={org.id}>
@@ -521,13 +564,13 @@ export default function FleetManagementModal({
                     fullWidth
                     size="small"
                     select
-                    label="Driver (optional)"
+                    label={vehiclesContent.modal.fields.driverOptional.label}
                     value={row.driverId}
                     onChange={handleBindingDriverSelect(index)}
                     sx={modalTextFieldSx}
                   >
                     <MenuItem value="">
-                      <em>Not assigned</em>
+                      <em>{vehiclesContent.modal.binding.notAssigned}</em>
                     </MenuItem>
                     {renderDriverMenuItems(index)}
                   </TextField>
@@ -542,7 +585,7 @@ export default function FleetManagementModal({
             fullWidth
             onClick={addBindingRow}
           >
-            Add organization &amp; driver
+            {vehiclesContent.modal.binding.addOrgAndDriver}
           </Button>
         </Box>
       )}

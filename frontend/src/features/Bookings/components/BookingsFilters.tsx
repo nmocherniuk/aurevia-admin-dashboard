@@ -9,6 +9,7 @@ import {
   VEHICLE_FILTER_OPTIONS,
   PAYMENT_FILTER_OPTIONS,
 } from "../constants/filters";
+import { searchFieldPlaceholder } from "../../../content/common";
 
 type BookingsFiltersProps = {
   filters: BookingsFilterState;
@@ -55,7 +56,7 @@ export default function BookingsFilters({
           onChange={(e) => onFilterChange("payment", e.target.value as string)}
         />
         <SearchField
-          placeholder="Пошук: клієнт, id або маршрут"
+          placeholder={searchFieldPlaceholder()}
           value={filters.search}
           onChange={(e) => onFilterChange("search", e.target.value)}
           sx={{ gridColumn: { xs: "1 / -1", md: "auto" } }}

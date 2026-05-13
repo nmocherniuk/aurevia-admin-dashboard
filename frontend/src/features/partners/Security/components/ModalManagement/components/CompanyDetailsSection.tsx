@@ -6,6 +6,10 @@ import {
   sectionLabelSx,
 } from "../../../../../../components/ui/modalStyles";
 import type { SecurityOrganizationFormValues } from "../../../data/types";
+import { securityPartnersContent } from "../../../../../../content/securityPartners";
+
+const om = securityPartnersContent.organizationModal;
+const cd = om.companyDetails;
 
 type Props = {
   readOnly: boolean;
@@ -18,16 +22,16 @@ type Props = {
 function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Company details</Typography>
+      <Typography sx={sectionLabelSx}>{om.sections.companyDetails}</Typography>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
-            <DetailField label="Legal form" value={formValues.legalForm} />
+            <DetailField label={cd.legalForm.label} value={formValues.legalForm} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Legal form"
+              label={cd.legalForm.label}
               value={formValues.legalForm}
               onChange={handleChange("legalForm")}
               sx={modalTextFieldSx}
@@ -37,14 +41,14 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="SIREN / SIRET"
+              label={cd.sirenOrSiret.label}
               value={formValues.sirenOrSiret}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="SIREN / SIRET"
+              label={cd.sirenOrSiret.label}
               value={formValues.sirenOrSiret}
               onChange={handleChange("sirenOrSiret")}
               sx={modalTextFieldSx}
@@ -54,14 +58,14 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="License number"
+              label={cd.licenseNumber.label}
               value={formValues.licenseNumber}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="License number"
+              label={cd.licenseNumber.label}
               value={formValues.licenseNumber}
               onChange={handleChange("licenseNumber")}
               sx={modalTextFieldSx}
@@ -70,12 +74,12 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="CNAPS number" value={formValues.cnapsNumber} />
+            <DetailField label={cd.cnapsNumber.label} value={formValues.cnapsNumber} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="CNAPS number"
+              label={cd.cnapsNumber.label}
               value={formValues.cnapsNumber}
               onChange={handleChange("cnapsNumber")}
               sx={modalTextFieldSx}
@@ -85,7 +89,7 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Registration date"
+              label={cd.registrationDate.label}
               value={formValues.registrationDate}
             />
           ) : (
@@ -93,7 +97,7 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
               fullWidth
               size="small"
               type="date"
-              label="Registration date"
+              label={cd.registrationDate.label}
               value={formValues.registrationDate}
               onChange={handleChange("registrationDate")}
               InputLabelProps={{ shrink: true }}
@@ -104,14 +108,14 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Registered address"
+              label={cd.registeredAddress.label}
               value={formValues.registeredAddress}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Registered address"
+              label={cd.registeredAddress.label}
               value={formValues.registeredAddress}
               onChange={handleChange("registeredAddress")}
               multiline
@@ -123,14 +127,14 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Office address"
+              label={cd.officeAddress.label}
               value={formValues.officeAddress}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Office address"
+              label={cd.officeAddress.label}
               value={formValues.officeAddress}
               onChange={handleChange("officeAddress")}
               multiline
@@ -141,12 +145,12 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Website URL" value={formValues.websiteUrl} />
+            <DetailField label={cd.websiteUrl.label} value={formValues.websiteUrl} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Website URL"
+              label={cd.websiteUrl.label}
               value={formValues.websiteUrl}
               onChange={handleChange("websiteUrl")}
               sx={modalTextFieldSx}
@@ -156,14 +160,14 @@ function CompanyDetailsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Director full name"
+              label={cd.directorFullName.label}
               value={formValues.directorFullName}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Director full name"
+              label={cd.directorFullName.label}
               value={formValues.directorFullName}
               onChange={handleChange("directorFullName")}
               sx={modalTextFieldSx}

@@ -1,8 +1,12 @@
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PageHeader from "../../../components/PageHeader";
+import {
+  bookingContent,
+  formatBookingsPageSubtitle,
+} from "../../../content/booking";
 
-type Props = { onNewBooking?: () => void };
+type Props = { onNewBooking?: () => void; activeTransfersToday: number };
 
 const primaryButtonSx = {
   width: { xs: "100%", sm: "auto" },
@@ -15,11 +19,14 @@ const primaryButtonSx = {
   "&:hover": { bgcolor: "primary.dark" },
 };
 
-export default function BookingsHeader({ onNewBooking }: Props) {
+export default function BookingsHeader({
+  onNewBooking,
+  activeTransfersToday,
+}: Props) {
   return (
     <PageHeader
-      title="Bookings Calendar"
-      subtitle="Managing 24 active transfers today"
+      title={bookingContent.page.title}
+      subtitle={formatBookingsPageSubtitle(activeTransfersToday)}
       sx={{ pt: { xs: 1, md: 2 } }}
       subtitleSx={{ fontSize: { xs: "0.875rem", md: "1rem" } }}
       action={
@@ -29,7 +36,7 @@ export default function BookingsHeader({ onNewBooking }: Props) {
           onClick={onNewBooking}
           sx={primaryButtonSx}
         >
-          New Booking
+          {bookingContent.actions.newBooking}
         </Button>
       }
     />

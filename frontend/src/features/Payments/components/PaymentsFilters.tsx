@@ -1,6 +1,7 @@
 import { Box, TextField } from "@mui/material";
 import SearchField from "../../../components/SearchField";
 import FilterPaper from "../../../components/FilterPaper";
+import { paymentsContent } from "../../../content/payments";
 import FormSelect from "../../../components/FormSelect";
 import type { PaymentsFilterState } from "../constants/filters";
 import {
@@ -47,7 +48,7 @@ export default function PaymentsFilters({
         />
         <TextField
           size="small"
-          label="From"
+          label={paymentsContent.filters.dateFrom}
           type="date"
           value={filters.dateFrom}
           onChange={(e) => onFilterChange("dateFrom", e.target.value)}
@@ -56,7 +57,7 @@ export default function PaymentsFilters({
         />
         <TextField
           size="small"
-          label="To"
+          label={paymentsContent.filters.dateTo}
           type="date"
           value={filters.dateTo}
           onChange={(e) => onFilterChange("dateTo", e.target.value)}
@@ -74,7 +75,7 @@ export default function PaymentsFilters({
           onChange={(e) => onFilterChange("vehicle", e.target.value as string)}
         />
         <SearchField
-          placeholder="Client or booking ID"
+          placeholder={paymentsContent.filters.searchPlaceholder}
           value={filters.search}
           onChange={(e) => onFilterChange("search", e.target.value)}
           sx={{ gridColumn: { xs: "1 / -1", md: "auto" } }}

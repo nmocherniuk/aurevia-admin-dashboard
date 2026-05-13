@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import type { VehiclePricing } from "../data/pricingData";
 import { modalTextFieldSx } from "../../../components/ui/modalStyles";
 import BaseModal from "../../../components/BaseModal";
+import { pricingContent } from "../../../content/pricing";
 
 type Props = {
   open: boolean;
@@ -72,7 +73,8 @@ export default function PricingEditModal({
         <>
           <InfoOutlinedIcon sx={{ color: "text.secondary", fontSize: 20 }} />
           <Typography component="span" variant="h6" sx={{ fontWeight: 700, color: "text.primary" }}>
-            Edit price — {row.vehicle.vehicleName}
+            {pricingContent.modal.titlePrefix}
+            {row.vehicle.vehicleName}
           </Typography>
         </>
       }
@@ -94,7 +96,7 @@ export default function PricingEditModal({
               },
             }}
           >
-            Cancel
+            {pricingContent.modal.cancel}
           </Button>
           <Button
             variant="contained"
@@ -108,7 +110,7 @@ export default function PricingEditModal({
               px: 2,
             }}
           >
-            Save
+            {pricingContent.modal.save}
           </Button>
         </>
       }
@@ -118,8 +120,8 @@ export default function PricingEditModal({
           <TextField
             fullWidth
             size="small"
-            label="Price per hour"
-            placeholder="0"
+            label={pricingContent.modal.fields.perHour.label}
+            placeholder={pricingContent.modal.fields.perHour.placeholder}
             type="number"
             value={perHour}
             onChange={(e) => setPerHour(e.target.value)}
@@ -132,8 +134,8 @@ export default function PricingEditModal({
           <TextField
             fullWidth
             size="small"
-            label="Price per KM"
-            placeholder="0"
+            label={pricingContent.modal.fields.perKm.label}
+            placeholder={pricingContent.modal.fields.perKm.placeholder}
             type="number"
             value={perKm}
             onChange={(e) => setPerKm(e.target.value)}
@@ -146,7 +148,7 @@ export default function PricingEditModal({
           <TextField
             fullWidth
             size="small"
-            label="Minimum fare (EUR)"
+            label={pricingContent.modal.fields.minimumFare.label}
             type="number"
             value={minimumFare}
             onChange={(e) => setMinimumFare(e.target.value)}
@@ -159,7 +161,7 @@ export default function PricingEditModal({
           <TextField
             fullWidth
             size="small"
-            label="Holiday surcharge (%)"
+            label={pricingContent.modal.fields.holidaySurchargePercent.label}
             type="number"
             value={holidaySurchargePercent}
             onChange={(e) => setHolidaySurchargePercent(e.target.value)}
@@ -172,7 +174,7 @@ export default function PricingEditModal({
           <TextField
             fullWidth
             size="small"
-            label="Night surcharge (%)"
+            label={pricingContent.modal.fields.nightSurchargePercent.label}
             type="number"
             value={nightSurchargePercent}
             onChange={(e) => setNightSurchargePercent(e.target.value)}

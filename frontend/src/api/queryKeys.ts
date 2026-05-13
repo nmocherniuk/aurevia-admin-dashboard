@@ -43,4 +43,10 @@ export const queryKeys = {
     byOrganization: (organizationId: string) =>
       [...queryKeys.securityAgents.all, "byOrganization", organizationId] as const,
   },
+  dashboard: {
+    all: ["dashboard"] as const,
+    overview: () => [...queryKeys.dashboard.all, "overview"] as const,
+    revenueSeries: () =>
+      [...queryKeys.dashboard.all, "revenueSeries"] as const,
+  },
 } as const;

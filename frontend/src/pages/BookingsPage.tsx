@@ -24,6 +24,7 @@ import {
   type PublicVehicleClass,
 } from "../api/bookings";
 import { queryKeys } from "../api/queryKeys";
+import { bookingContent } from "../content/booking";
 import type { BookingFormValues } from "../features/Bookings/components/BookingManagementModal";
 import {
   useBookingsList,
@@ -69,7 +70,7 @@ export default function BookingsPage() {
     bookingsError instanceof Error
       ? bookingsError.message
       : bookingsError
-        ? "Failed to load bookings"
+        ? bookingContent.errors.loadBookings
         : null;
 
   const { filters, setFilter } = useBookingsFilters();
@@ -124,10 +125,20 @@ export default function BookingsPage() {
     weeksToShow,
   });
 
+  const activeTransfersToday = useMemo(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    return bookings.filter(
+      (booking: Booking) =>
+        booking.date === today &&
+        (booking.status === "pending" || booking.status === "assigned"),
+    ).length;
+  }, [bookings]);
+
   const stats = useMemo(
     () => [
       {
-        label: "Today's Bookings",
+        key: "todaysBookings",
+        label: bookingContent.stats.todaysBookings,
         value: String(
           bookings.filter(
             (booking: Booking) =>
@@ -137,7 +148,8 @@ export default function BookingsPage() {
         icon: EventIcon,
       },
       {
-        label: "Pending",
+        key: "pending",
+        label: bookingContent.stats.pending,
         value: String(
           bookings.filter((booking: Booking) => booking.status === "pending")
             .length,
@@ -145,7 +157,8 @@ export default function BookingsPage() {
         icon: ScheduleIcon,
       },
       {
-        label: "Completed Today",
+        key: "completedToday",
+        label: bookingContent.stats.completedToday,
         value: String(
           bookings.filter(
             (booking: Booking) =>
@@ -156,7 +169,8 @@ export default function BookingsPage() {
         icon: CheckCircleIcon,
       },
       {
-        label: "Assigned Drivers",
+        key: "assignedDrivers",
+        label: bookingContent.stats.assignedDrivers,
         value: String(
           bookings.filter((booking: Booking) => Boolean(booking.driverId))
             .length,
@@ -241,6 +255,7 @@ export default function BookingsPage() {
         onFilterChange={setFilter}
         filteredBookings={sortedBookings}
         onNewBooking={() => setBookingModal({ open: true, booking: null })}
+        activeTransfersToday={activeTransfersToday}
       />
 
       <BookingsMobileView
@@ -255,6 +270,7 @@ export default function BookingsPage() {
         onFilterChange={setFilter}
         onNewBooking={() => setBookingModal({ open: true, booking: null })}
         onBookingClick={setSelectedBookingDetail}
+        activeTransfersToday={activeTransfersToday}
       />
 
       <BookingDetailModal

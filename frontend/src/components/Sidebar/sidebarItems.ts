@@ -7,27 +7,33 @@ import PaymentIcon from "@mui/icons-material/Payment";
 import PriceChangeIcon from "@mui/icons-material/PriceChange";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { commonContent } from "../../content/common";
 
 export const sidebarMenuItems = [
-  { label: "Dashboard", icon: DashboardIcon, path: "/" },
+  { label: commonContent.nav.dashboard, icon: DashboardIcon, path: "/" },
 ];
 
 export const sidebarDriversItems = [
-  { label: "Bookings", icon: EventIcon, path: "/bookings" },
-  { label: "Drivers", icon: PeopleIcon, path: "/drivers-partners" },
-  { label: "Fleet", icon: DirectionsCarIcon, path: "/fleet" },
-  { label: "Pricing", icon: PriceChangeIcon, path: "/pricing" },
+  { label: commonContent.nav.bookings, icon: EventIcon, path: "/bookings" },
+  { label: commonContent.nav.drivers, icon: PeopleIcon, path: "/drivers-partners" },
+  { label: commonContent.nav.fleet, icon: DirectionsCarIcon, path: "/fleet" },
+  { label: commonContent.nav.pricing, icon: PriceChangeIcon, path: "/pricing" },
 ];
 
 export const sidebarSecurityItems = [
-  { label: "Security", icon: SecurityIcon, path: "/security-partners" },
+  { label: commonContent.nav.security, icon: SecurityIcon, path: "/security-partners" },
 ];
 
 export const sidebarFinancialItems = [
-  { label: "Payments", icon: PaymentIcon, path: "/payments" },
+  { label: commonContent.nav.payments, icon: PaymentIcon, path: "/payments" },
 ];
 
 export const sidebarBottomItems = [
-  { label: "Settings", icon: SettingsIcon, path: "/settings" },
-  { label: "Sign Out", icon: LogoutIcon, path: "/sign-out", isSignOut: true },
+  { label: commonContent.nav.settings, icon: SettingsIcon, path: "/settings" },
+  {
+    label: commonContent.nav.signOut,
+    icon: LogoutIcon,
+    path: "/sign-out",
+    isSignOut: true,
+  },
 ];

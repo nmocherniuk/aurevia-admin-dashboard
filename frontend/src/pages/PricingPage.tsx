@@ -9,6 +9,7 @@ import { getApiErrorMessage, isNotFoundError } from "../api/organizations";
 import { queryKeys } from "../api/queryKeys";
 import type { VehiclePricing } from "../features/Pricing/data/pricingData";
 import { useToast } from "../providers/ToastProvider";
+import { pricingContent } from "../content/pricing";
 
 export default function PricingPage() {
   const queryClient = useQueryClient();
@@ -23,7 +24,7 @@ export default function PricingPage() {
   const loading = isPending;
   const listError =
     pricingError && !isNotFoundError(pricingError)
-      ? getApiErrorMessage(pricingError, "Failed to load pricing")
+      ? getApiErrorMessage(pricingError, pricingContent.errors.loadList)
       : null;
 
   const onEditRow = useCallback((row: VehiclePricing) => {
@@ -51,12 +52,12 @@ export default function PricingPage() {
         });
         await queryClient.invalidateQueries({ queryKey: queryKeys.pricing.all });
         showToast({
-          message: "Pricing saved successfully",
+          message: pricingContent.toasts.saved,
           severity: "success",
         });
       } catch (e) {
         showToast({
-          message: "Failed to save pricing",
+          message: pricingContent.toasts.saveFailed,
           severity: "error",
         });
         throw e;
@@ -85,11 +86,11 @@ export default function PricingPage() {
             </Box>
           ) : listError ? (
             <Box sx={{ py: 8, textAlign: "center", color: "text.secondary" }}>
-              Unable to load pricing.
+              {pricingContent.empty.unableToLoad}
             </Box>
           ) : pricingData.length === 0 ? (
             <Box sx={{ py: 8, textAlign: "center", color: "text.secondary" }}>
-              No results
+              {pricingContent.empty.noResults}
             </Box>
           ) : (
             <PricingTable pricingData={pricingData} onEditRow={onEditRow} />

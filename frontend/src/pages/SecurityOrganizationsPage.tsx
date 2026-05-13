@@ -21,6 +21,7 @@ import { formValuesToSecurityOrganization } from "../features/partners/Security/
 import { useToast } from "../providers/ToastProvider";
 import SecurityOrganizationManagementModal from "../features/partners/Security/components/ModalManagement/SecurityOrganizationManagementModal";
 import SecurityOrganizationStats from "../features/partners/Security/components/SecurityOrganizationStats";
+import { securityPartnersContent } from "../content/securityPartners";
 
 export default function SecurityOrganizationsPage() {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ export default function SecurityOrganizationsPage() {
 
   const listError =
     securityOrganizationsError && !isNotFoundError(securityOrganizationsError)
-      ? getApiErrorMessage(securityOrganizationsError, "Failed to load partners")
+      ? getApiErrorMessage(securityOrganizationsError, securityPartnersContent.errors.loadList)
       : null;
 
   const activeCount = useMemo(
@@ -78,8 +79,8 @@ export default function SecurityOrganizationsPage() {
 
       showToast({
         message: organizationId
-          ? "Organization updated successfully."
-          : "Organization created successfully.",
+          ? securityPartnersContent.toasts.updated
+          : securityPartnersContent.toasts.created,
         severity: "success",
       });
 
@@ -89,7 +90,7 @@ export default function SecurityOrganizationsPage() {
         organization: null,
       }));
     } catch (e) {
-      const msg = getApiErrorMessage(e, "Failed to save organization");
+      const msg = getApiErrorMessage(e, securityPartnersContent.errors.save);
       showToast({ message: msg, severity: "error" });
       throw e;
     }
@@ -136,11 +137,11 @@ export default function SecurityOrganizationsPage() {
             </Box>
           ) : listError ? (
             <Box sx={{ py: 8, textAlign: "center", color: "text.secondary" }}>
-              Unable to load partners.
+              {securityPartnersContent.empty.unableToLoad}
             </Box>
           ) : securityOrganizations.length === 0 ? (
             <Box sx={{ py: 8, textAlign: "center", color: "text.secondary" }}>
-              No organizations found.
+              {securityPartnersContent.empty.noneFound}
             </Box>
           ) : (
             <SecurityOrganizationTable
@@ -179,16 +180,16 @@ export default function SecurityOrganizationsPage() {
               });
 
               showToast({
-                message: "Organization deleted successfully.",
+                message: securityPartnersContent.toasts.deleted,
                 severity: "success",
               });
             } catch (e) {
-              showToast({ message: getApiErrorMessage(e, "Failed to delete organization"), severity: "error" });
+              showToast({ message: getApiErrorMessage(e, securityPartnersContent.errors.delete), severity: "error" });
               throw e;
             }
           }}
-          title="Delete organization?"
-          message="This action cannot be undone. The record will be deleted permanently."
+          title={securityPartnersContent.deleteDialog.title}
+          message={securityPartnersContent.deleteDialog.message}
         />
       </Container>
     </Box>

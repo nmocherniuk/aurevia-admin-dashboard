@@ -20,6 +20,8 @@ import {
   type FleetStatus,
 } from "../data/dummyFleet";
 import type { FleetVehicle } from "./ModalManagement/fleetManagementForm.types";
+import { commonContent } from "../../../content/common";
+import { fleetClassLabel, vehiclesContent } from "../../../content/vehicles";
 
 const classColors: Record<FleetClass, { bg: string; color: string }> = {
   Comfort: { bg: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.9)" },
@@ -100,14 +102,14 @@ export default function FleetCard({ vehicle: v, onView, onEdit, onDelete }: Prop
               {v.color ? ` · ${v.color}` : ""}
             </Typography>
             <Typography variant="caption" sx={{ color: "text.secondary", display: "block" }}>
-              ID: {v.id}
+              {vehiclesContent.table.idPrefix}: {v.id}
             </Typography>
           </Box>
         </Box>
         <IconButton
           size="small"
           sx={{ color: "text.secondary", flexShrink: 0 }}
-          aria-label="actions"
+          aria-label={commonContent.dataTable.actionsColumn}
           onClick={openMenu}
         >
           <MoreVertIcon />
@@ -125,13 +127,13 @@ export default function FleetCard({ vehicle: v, onView, onEdit, onDelete }: Prop
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Edit</ListItemText>
+          <ListItemText>{vehiclesContent.rowMenu.edit}</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
           <ListItemIcon sx={{ color: "error.main" }}>
             <DeleteIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Delete</ListItemText>
+          <ListItemText>{vehiclesContent.rowMenu.delete}</ListItemText>
         </MenuItem>
       </Menu>
       <Box
@@ -147,7 +149,7 @@ export default function FleetCard({ vehicle: v, onView, onEdit, onDelete }: Prop
         }}
       >
         <Chip
-          label={v.class}
+          label={fleetClassLabel(v.class)}
           size="small"
           sx={{
             bgcolor: classStyle.bg,

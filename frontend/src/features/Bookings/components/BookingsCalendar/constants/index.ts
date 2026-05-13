@@ -1,4 +1,5 @@
 import type { BookingStatus } from "../data/dummyBookings";
+import { bookingContent } from "../../../../../content/booking";
 
 export const STATUS_STYLES: Record<
   BookingStatus,
@@ -33,8 +34,8 @@ export const DEFAULT_STATUS_STYLE = {
 };
 
 export const STATUS_LABELS: Record<BookingStatus, string> = {
-  pending: "Очікує",
-  assigned: "Ongoing",
-  completed: "Завершено",
-  cancelled: "Скасовано",
+  pending: bookingContent.filters.status.pending,
+  assigned: bookingContent.filters.status.assigned,
+  completed: bookingContent.filters.status.completed,
+  cancelled: bookingContent.filters.status.cancelled,
 };

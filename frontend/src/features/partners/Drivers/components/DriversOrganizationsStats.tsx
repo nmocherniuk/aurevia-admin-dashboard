@@ -3,6 +3,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 import GroupsIcon from "@mui/icons-material/Groups";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import CardStat from "../../../../components/CardStat";
+import { driversContent } from "../../../../content/drivers";
 
 type Props = {
   totalOrganizations: number;
@@ -17,17 +18,20 @@ export default function DriversOrganizationsStats({
 }: Props) {
   const stats = [
     {
-      label: "Organizations",
+      key: "organizations",
+      label: driversContent.stats.organizations,
       value: String(totalOrganizations),
       icon: BusinessIcon,
     },
     {
-      label: "Active",
+      key: "active",
+      label: driversContent.stats.active,
       value: String(activeOrganizations),
       icon: GroupsIcon,
     },
     {
-      label: "Inactive",
+      key: "inactive",
+      label: driversContent.stats.inactive,
       value: String(inactiveOrganizations),
       icon: PersonOffIcon,
     },
@@ -46,7 +50,10 @@ export default function DriversOrganizationsStats({
       }}
     >
       {stats.map((stat) => (
-        <CardStat key={stat.label} stat={stat} />
+        <CardStat
+          key={stat.key}
+          stat={{ label: stat.label, value: stat.value, icon: stat.icon }}
+        />
       ))}
     </Box>
   );

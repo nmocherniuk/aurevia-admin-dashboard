@@ -7,6 +7,10 @@ import {
 import { CURRENCY_OPTIONS, OPERATIONS_OPTIONS } from "../constants";
 import { memo } from "react";
 import type { SecurityOrganizationFormValues } from "../../../data/types";
+import { securityPartnersContent } from "../../../../../../content/securityPartners";
+
+const om = securityPartnersContent.organizationModal;
+const fin = om.financial;
 
 type Props = {
   readOnly: boolean;
@@ -19,19 +23,19 @@ type Props = {
 function FinancialSection({ readOnly, formValues, handleChange }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Financial</Typography>
+      <Typography sx={sectionLabelSx}>{om.sections.financial}</Typography>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Bank account IBAN"
+              label={fin.bankAccountIban.label}
               value={formValues.bankAccountIban}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Bank account IBAN"
+              label={fin.bankAccountIban.label}
               value={formValues.bankAccountIban}
               onChange={handleChange("bankAccountIban")}
               sx={modalTextFieldSx}
@@ -42,14 +46,14 @@ function FinancialSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Payment terms"
+              label={fin.paymentTerms.label}
               value={formValues.paymentTerms}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Payment terms"
+              label={fin.paymentTerms.label}
               value={formValues.paymentTerms}
               onChange={handleChange("paymentTerms")}
               multiline
@@ -61,13 +65,13 @@ function FinancialSection({ readOnly, formValues, handleChange }: Props) {
 
         <Grid size={{ xs: 12, md: 4 }}>
           {readOnly ? (
-            <DetailField label="Currency" value={formValues.currency} />
+            <DetailField label={fin.currency.label} value={formValues.currency} />
           ) : (
             <TextField
               fullWidth
               size="small"
               select
-              label="Currency"
+              label={fin.currency.label}
               value={formValues.currency}
               onChange={handleChange("currency")}
               sx={modalTextFieldSx}

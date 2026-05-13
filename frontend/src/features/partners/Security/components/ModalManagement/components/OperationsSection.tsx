@@ -19,6 +19,16 @@ import {
   SPECIAL_REQUIREMENTS_OPTIONS,
 } from "../constants";
 import type { SecurityOrganizationFormValues } from "../../../data/types";
+import {
+  commonContent,
+} from "../../../../../../content/common";
+import {
+  securityPartnersContent,
+  securityServiceTypeLabel,
+} from "../../../../../../content/securityPartners";
+
+const om = securityPartnersContent.organizationModal;
+const op = om.operations;
 
 type Props = {
   readOnly: boolean;
@@ -31,19 +41,19 @@ type Props = {
 function OperationsSection({ readOnly, formValues, handleChange }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Operations</Typography>
+      <Typography sx={sectionLabelSx}>{om.sections.operations}</Typography>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Service areas"
+              label={op.serviceAreas.label}
               value={formValues.serviceAreas}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Service areas"
+              label={op.serviceAreas.label}
               value={formValues.serviceAreas}
               onChange={handleChange("serviceAreas")}
               multiline
@@ -56,7 +66,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Service types"
+              label={op.serviceTypes.label}
               value={(formValues.serviceTypes ?? []).join(", ")}
             />
           ) : (
@@ -64,7 +74,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
               fullWidth
               size="small"
               select
-              label="Service types"
+              label={op.serviceTypes.label}
               value={formValues.serviceTypes}
               SelectProps={{ multiple: true }}
               onChange={(e) =>
@@ -74,7 +84,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
             >
               {SECURITY_SERVICE_TYPES.map((t) => (
                 <MenuItem key={t} value={t}>
-                  {t}
+                  {securityServiceTypeLabel(t)}
                 </MenuItem>
               ))}
             </TextField>
@@ -84,8 +94,8 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Support 24/7"
-              value={formValues.support24_7 ? "Yes" : "No"}
+              label={op.support247.label}
+              value={formValues.support24_7 ? commonContent.boolean.yes : commonContent.boolean.no}
             />
           ) : (
             <FormControlLabel
@@ -95,7 +105,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
                   onChange={handleChange("support24_7")}
                 />
               }
-              label="Support 24/7"
+              label={op.support247.label}
             />
           )}
         </Grid>
@@ -103,7 +113,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Languages spoken"
+              label={op.languagesSpoken.label}
               value={(formValues.languagesSpoken ?? []).join(", ")}
             />
           ) : (
@@ -111,7 +121,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
               fullWidth
               size="small"
               select
-              label="Languages spoken"
+              label={op.languagesSpoken.label}
               value={formValues.languagesSpoken}
               SelectProps={{ multiple: true }}
               onChange={(e) =>
@@ -131,7 +141,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12, md: 4 }}>
           {readOnly ? (
             <DetailField
-              label="Min booking (hours)"
+              label={op.minBookingHours.label}
               value={formValues.minBookingHours}
             />
           ) : (
@@ -139,7 +149,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
               fullWidth
               size="small"
               type="number"
-              label="Min booking (hours)"
+              label={op.minBookingHours.label}
               value={formValues.minBookingHours}
               onChange={handleChange("minBookingHours")}
               sx={modalTextFieldSx}
@@ -149,7 +159,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12, md: 4 }}>
           {readOnly ? (
             <DetailField
-              label="Mobilization time (min)"
+              label={op.mobilizationTimeMinutes.label}
               value={formValues.mobilizationTimeMinutes}
             />
           ) : (
@@ -157,7 +167,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
               fullWidth
               size="small"
               type="number"
-              label="Mobilization time (min)"
+              label={op.mobilizationTimeMinutes.label}
               value={formValues.mobilizationTimeMinutes}
               onChange={handleChange("mobilizationTimeMinutes")}
               sx={modalTextFieldSx}
@@ -166,13 +176,13 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           {readOnly ? (
-            <DetailField label="Agents count" value={formValues.agentsCount} />
+            <DetailField label={op.agentsCount.label} value={formValues.agentsCount} />
           ) : (
             <TextField
               fullWidth
               size="small"
               type="number"
-              label="Agents count"
+              label={op.agentsCount.label}
               value={formValues.agentsCount}
               onChange={handleChange("agentsCount")}
               sx={modalTextFieldSx}
@@ -185,7 +195,7 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
             {readOnly ? (
               <DetailField
                 label={c.label}
-                value={formValues[c.key] ? "Yes" : "No"}
+                value={formValues[c.key] ? commonContent.boolean.yes : commonContent.boolean.no}
               />
             ) : (
               <FormControlLabel
@@ -204,14 +214,14 @@ function OperationsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Special requirements"
+              label={op.specialRequirements.label}
               value={formValues.specialRequirements}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Special requirements"
+              label={op.specialRequirements.label}
               value={formValues.specialRequirements}
               onChange={handleChange("specialRequirements")}
               multiline

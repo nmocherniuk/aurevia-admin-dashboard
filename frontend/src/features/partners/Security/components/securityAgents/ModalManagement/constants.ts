@@ -1,37 +1,44 @@
 import type { SecurityAgentFormValues } from "./securityAgentForm.types";
+import { securityAgentContent } from "../../../../../../content/securityAgent";
+
+const sa = securityAgentContent;
+const emp = sa.employmentStatus;
+const phys = sa.physicalLevel;
+const doc = sa.documentProvided;
+const opFlags = sa.modal.operations.operationsFlags;
 
 export const EMPLOYMENT_STATUS_OPTIONS = [
-  { value: "", label: "—" },
-  { value: "EMPLOYEE", label: "Employee" },
-  { value: "FREELANCE", label: "Freelance" },
-  { value: "SUBCONTRACTOR", label: "Subcontractor" },
+  { value: "", label: emp.empty },
+  { value: "EMPLOYEE", label: emp.EMPLOYEE },
+  { value: "FREELANCE", label: emp.FREELANCE },
+  { value: "SUBCONTRACTOR", label: emp.SUBCONTRACTOR },
 ] as const;
 
 export const PHYSICAL_LEVEL_OPTIONS = [
-  { value: "", label: "—" },
-  { value: "LOW", label: "Low" },
-  { value: "MEDIUM", label: "Medium" },
-  { value: "HIGH", label: "High" },
+  { value: "", label: phys.empty },
+  { value: "LOW", label: phys.LOW },
+  { value: "MEDIUM", label: phys.MEDIUM },
+  { value: "HIGH", label: phys.HIGH },
 ] as const;
 
 export const DOCUMENT_PROVIDED_OPTIONS: {
   key: keyof SecurityAgentFormValues;
   label: string;
 }[] = [
-    { key: "passportProvided", label: "Passport" },
-    { key: "professionalCardProvided", label: "Professional card" },
-    { key: "cnapsProvided", label: "CNAPS" },
-    { key: "cvProvided", label: "CV" },
-    { key: "certificatesProvided", label: "Certificates" },
-    { key: "firstAidCertificateProvided", label: "First aid certificate" },
-    { key: "driverLicenseProvided", label: "Driver license" },
-    { key: "backgroundCheckProvided", label: "Background check" },
-    { key: "profilePhotoProvided", label: "Profile photo" },
-    { key: "signedContractProvided", label: "Signed contract" },
-  ];
+  { key: "passportProvided", label: doc.passportProvided },
+  { key: "professionalCardProvided", label: doc.professionalCardProvided },
+  { key: "cnapsProvided", label: doc.cnapsProvided },
+  { key: "cvProvided", label: doc.cvProvided },
+  { key: "certificatesProvided", label: doc.certificatesProvided },
+  { key: "firstAidCertificateProvided", label: doc.firstAidCertificateProvided },
+  { key: "driverLicenseProvided", label: doc.driverLicenseProvided },
+  { key: "backgroundCheckProvided", label: doc.backgroundCheckProvided },
+  { key: "profilePhotoProvided", label: doc.profilePhotoProvided },
+  { key: "signedContractProvided", label: doc.signedContractProvided },
+];
 
 export const OPERATIONS_OPTIONS = [
-  ["canWorkInTeam", "Can work in team"],
-  ["canTravelWithClient", "Can travel with client"],
-  ["canDoDriverSecurity", "Driver security"],
-] as const
+  ["canWorkInTeam", opFlags.canWorkInTeam],
+  ["canTravelWithClient", opFlags.canTravelWithClient],
+  ["canDoDriverSecurity", opFlags.canDoDriverSecurity],
+] as const;

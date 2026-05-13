@@ -12,7 +12,11 @@ import {
 } from "../../../../../../components/ui/modalStyles";
 import type { SecurityOrganizationFormValues } from "../../../data/types";
 import { memo } from "react";
+import { commonContent } from "../../../../../../content/common";
+import { securityPartnersContent } from "../../../../../../content/securityPartners";
 import { DOCUMENTS_OPTIONS } from "../constants";
+
+const om = securityPartnersContent.organizationModal;
 
 type Props = {
   readOnly: boolean;
@@ -25,7 +29,7 @@ type Props = {
 function DocumentsSection({ readOnly, formValues, handleChange }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Documents</Typography>
+      <Typography sx={sectionLabelSx}>{om.sections.documents}</Typography>
       <Grid container spacing={2}>
         {DOCUMENTS_OPTIONS.map((c, index) => {
           const isLastOdd =
@@ -37,7 +41,7 @@ function DocumentsSection({ readOnly, formValues, handleChange }: Props) {
               {readOnly ? (
                 <DetailField
                   label={c.label}
-                  value={formValues[c.key] ? "Yes" : "No"}
+                  value={formValues[c.key] ? commonContent.boolean.yes : commonContent.boolean.no}
                 />
               ) : (
                 <FormControlLabel
@@ -57,14 +61,14 @@ function DocumentsSection({ readOnly, formValues, handleChange }: Props) {
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Additional certifications"
+              label={om.documents.additionalCertifications.label}
               value={formValues.additionalCertifications}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Additional certifications"
+              label={om.documents.additionalCertifications.label}
               value={formValues.additionalCertifications}
               onChange={handleChange("additionalCertifications")}
               multiline

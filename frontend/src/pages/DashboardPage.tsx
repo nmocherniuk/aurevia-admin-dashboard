@@ -11,10 +11,12 @@ import DashboardHeader from "../features/Dashboard/components/DashboardHeader";
 import { theme } from "../theme/theme";
 import type { BookingDto } from "../api/bookings";
 import { listBookings } from "../api/bookings";
+import { getDashboardOverview, getDashboardRevenueSeries } from "../api/dashboard";
 import { listDrivers } from "../api/drivers";
 import { listOrganizations } from "../api/organizations";
 import type { Driver } from "../features/partners/Drivers/components/drivers/types";
 import { queryKeys } from "../api/queryKeys";
+import { dashboardContent } from "../content/dashboard";
 
 const HISTORY_DAYS = 30;
 const FUTURE_DAYS = 1;
@@ -24,14 +26,20 @@ function toDateKey(value: Date): string {
 }
 
 function toChartLabel(value: Date): string {
-  return value.toLocaleDateString("uk-UA", {
+  return value.toLocaleDateString("fr-FR", {
     day: "2-digit",
     month: "2-digit",
   });
 }
 
 export default function DashboardPage() {
-  const [bookingsQuery, organizationsQuery, driversQuery] = useQueries({
+  const [
+    bookingsQuery,
+    organizationsQuery,
+    driversQuery,
+    dashboardQuery,
+    revenueSeriesQuery,
+  ] = useQueries({
     queries: [
       {
         queryKey: queryKeys.bookings.list(),
@@ -45,6 +53,14 @@ export default function DashboardPage() {
         queryKey: queryKeys.drivers.list(),
         queryFn: () => listDrivers(),
       },
+      {
+        queryKey: queryKeys.dashboard.overview(),
+        queryFn: () => getDashboardOverview(),
+      },
+      {
+        queryKey: queryKeys.dashboard.revenueSeries(),
+        queryFn: () => getDashboardRevenueSeries(),
+      },
     ],
   });
 
@@ -54,12 +70,16 @@ export default function DashboardPage() {
     driversQuery.isPending;
 
   const errorFirst =
-    bookingsQuery.error ?? organizationsQuery.error ?? driversQuery.error;
+    bookingsQuery.error ??
+    organizationsQuery.error ??
+    driversQuery.error ??
+    dashboardQuery.error ??
+    revenueSeriesQuery.error;
   const error =
     errorFirst instanceof Error
       ? errorFirst.message
       : errorFirst
-        ? "Failed to load dashboard overview"
+        ? dashboardContent.errors.loadOverview
         : null;
 
   const { bookingDateKeys, bookingDailyCounts } =
@@ -136,7 +156,7 @@ export default function DashboardPage() {
       labels: bookingDateKeys,
       datasets: [
         {
-          label: "Bookings",
+          label: dashboardContent.bookings.chartDatasetLabel,
           backgroundColor: theme.palette.primary.main,
           borderColor: theme.palette.primary.main,
           data: bookingDailyCounts,
@@ -149,95 +169,99 @@ export default function DashboardPage() {
     [bookingDateKeys, bookingDailyCounts],
   );
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: {
-      mode: "index" as const,
-      intersect: false,
-    },
-    plugins: {
-      legend: {
-        position: "top" as const,
+  const bookingsChartOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: "index" as const,
+        intersect: false,
       },
-      title: {
-        display: false,
-      },
-      tooltip: {
-        enabled: true,
-        backgroundColor: "rgba(27, 31, 39, 0.96)",
-        borderColor: "rgba(255,255,255,0.12)",
-        borderWidth: 1,
-        titleColor: "#e5e7eb",
-        bodyColor: "#f3f4f6",
-        footerColor: "#9ca3af",
-        titleFont: {
-          size: 13,
-          weight: 700 as const,
+      plugins: {
+        legend: {
+          position: "top" as const,
         },
-        bodyFont: {
-          size: 12,
-          weight: 600 as const,
-        },
-        footerFont: {
-          size: 11,
-          weight: 500 as const,
-        },
-        padding: 12,
-        displayColors: true,
-        usePointStyle: true,
-        boxPadding: 6,
-        callbacks: {
-          title: (items: { label: string }[]) => {
-            const rawLabel = items[0]?.label ?? "";
-            const [day, month] = rawLabel.split(".");
-            if (!day || !month) return rawLabel;
-            const now = new Date();
-            const date = new Date(
-              now.getFullYear(),
-              Number(month) - 1,
-              Number(day),
-            );
-            return date.toLocaleDateString("uk-UA", {
-              weekday: "long",
-              day: "numeric",
-              month: "short",
-            });
-          },
-          label: (context: {
-            dataset: { label?: string };
-            formattedValue: string;
-          }) => {
-            const metricLabel = context.dataset.label ?? "Metric";
-            return `${metricLabel}: ${context.formattedValue}`;
-          },
-        },
-      },
-    },
-    scales: {
-      x: {
         title: {
           display: false,
         },
-        ticks: {
-          autoSkip: true,
-          maxTicksLimit: 8,
-          maxRotation: 0,
-          minRotation: 0,
-        },
-        grid: {
-          display: false,
+        tooltip: {
+          enabled: true,
+          backgroundColor: "rgba(27, 31, 39, 0.96)",
+          borderColor: "rgba(255,255,255,0.12)",
+          borderWidth: 1,
+          titleColor: "#e5e7eb",
+          bodyColor: "#f3f4f6",
+          footerColor: "#9ca3af",
+          titleFont: {
+            size: 13,
+            weight: 700 as const,
+          },
+          bodyFont: {
+            size: 12,
+            weight: 600 as const,
+          },
+          footerFont: {
+            size: 11,
+            weight: 500 as const,
+          },
+          padding: 12,
+          displayColors: true,
+          usePointStyle: true,
+          boxPadding: 6,
+          callbacks: {
+            title: (items: { label: string }[]) => {
+              const rawLabel = items[0]?.label ?? "";
+              const [day, month] = rawLabel.split(".");
+              if (!day || !month) return rawLabel;
+              const now = new Date();
+              const date = new Date(
+                now.getFullYear(),
+                Number(month) - 1,
+                Number(day),
+              );
+              return date.toLocaleDateString("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "short",
+              });
+            },
+            label: (context: {
+              dataset: { label?: string };
+              formattedValue: string;
+            }) => {
+              const metricLabel =
+                context.dataset.label ?? dashboardContent.charts.metricFallback;
+              return `${metricLabel} : ${context.formattedValue}`;
+            },
+          },
         },
       },
-      y: {
-        min: 0,
-        max: 25,
-        ticks: {
-          stepSize: 5,
+      scales: {
+        x: {
+          title: {
+            display: false,
+          },
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 8,
+            maxRotation: 0,
+            minRotation: 0,
+          },
+          grid: {
+            display: false,
+          },
+        },
+        y: {
+          min: 0,
+          max: 25,
+          ticks: {
+            stepSize: 5,
+          },
         },
       },
-    },
-  };
+    }),
+    [],
+  );
 
   return (
     <Box sx={{ minHeight: "100%", pb: 3, overflowX: "hidden" }}>
@@ -258,20 +282,26 @@ export default function DashboardPage() {
         <DashboardHeader />
 
         <Box sx={{ mt: 2 }}>
-          <DashboardStatCards />
+          <DashboardStatCards
+            overview={dashboardQuery.data}
+            isPending={dashboardQuery.isPending}
+          />
         </Box>
 
         <Box sx={{ mt: 2 }}>
-          <WeeklyRevenueCard />
+          <WeeklyRevenueCard
+            series={revenueSeriesQuery.data}
+            isPending={revenueSeriesQuery.isPending}
+          />
         </Box>
 
         <Box sx={{ mt: 2 }}>
           <ChartPlaceholderCard
-            title="Bookings overview"
+            title={dashboardContent.bookings.sectionTitle}
             chartId="bookings-overview-chart-container"
-            ariaLabel="Chart area for Bookings overview"
+            ariaLabel={dashboardContent.bookings.chartAriaLabel}
           >
-            <Line data={bookingsOverviewData} options={options} />
+            <Line data={bookingsOverviewData} options={bookingsChartOptions} />
           </ChartPlaceholderCard>
         </Box>
       </Container>

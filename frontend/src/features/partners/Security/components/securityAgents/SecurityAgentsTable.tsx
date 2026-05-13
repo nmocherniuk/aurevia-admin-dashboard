@@ -12,14 +12,21 @@ import { GenericTable } from "../../../../../components/GenericTable";
 import EntityActionsMenu from "../../../../../components/EntityActionsMenu";
 import type { SecurityAgent } from "./ModalManagement/securityAgentForm.types";
 
+import { securityAgentContent } from "../../../../../content/securityAgent";
+import { commonContent } from "../../../../../content/common";
+
 const statusStyle = (active: boolean) =>
   active
-    ? { bg: "rgba(34, 197, 94, 0.2)", color: "#22c55e", label: "Active" as const }
+    ? {
+        bg: "rgba(34, 197, 94, 0.2)" as const,
+        color: "#22c55e" as const,
+        label: commonContent.status.active,
+      }
     : {
-      bg: "rgba(255,255,255,0.08)",
-      color: "rgba(255,255,255,0.6)",
-      label: "Inactive" as const,
-    };
+        bg: "rgba(255,255,255,0.08)" as const,
+        color: "rgba(255,255,255,0.6)" as const,
+        label: commonContent.status.inactive,
+      };
 
 
 
@@ -43,7 +50,7 @@ function displayLicense(a: SecurityAgent): string {
 function displayExperienceYears(a: SecurityAgent): string {
   const y = a.experienceYears;
   if (y === null || y === undefined || y === "") return "";
-  return `${y} yrs`;
+  return `${y}${securityAgentContent.table.experienceYearsSuffix}`;
 }
 
 type Props = {
@@ -69,7 +76,7 @@ export default function SecurityAgentsTable({ securityAgents, onSecurityAgentVie
   const columns = [
     {
       key: "name",
-      label: "Name",
+      label: securityAgentContent.table.columnName,
       render: (a: SecurityAgent) => <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
         <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: "rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", color: "text.secondary" }}>
           <PersonIcon fontSize="small" />
@@ -79,22 +86,22 @@ export default function SecurityAgentsTable({ securityAgents, onSecurityAgentVie
     },
     {
       key: "licenseCertification",
-      label: "License / certification",
+      label: securityAgentContent.table.columnLicenseCertification,
       render: (a: SecurityAgent) => <Typography variant="body2" sx={{ color: "text.secondary" }}>{displayLicense(a)}</Typography>,
     },
     {
       key: "experience",
-      label: "Experience",
+      label: securityAgentContent.table.columnExperience,
       render: (a: SecurityAgent) => <Typography variant="body2" sx={{ color: "text.secondary" }}>{displayExperienceYears(a)}</Typography>,
     },
     {
       key: "languages",
-      label: "Languages",
+      label: securityAgentContent.table.columnLanguages,
       render: (a: SecurityAgent) => <Typography variant="body2" sx={{ color: "text.secondary" }}>{displayLanguages(a)}</Typography>,
     },
     {
       key: "status",
-      label: "Status",
+      label: securityAgentContent.table.columnStatus,
       render: (a: SecurityAgent) => {
         const s = statusStyle(a.status ?? true);
         return (
@@ -111,7 +118,7 @@ export default function SecurityAgentsTable({ securityAgents, onSecurityAgentVie
   return (
     <>
       <GenericTable
-        title="Security agents"
+        title={securityAgentContent.table.title}
         columns={columns}
         data={securityAgents}
         actions={openMenu}
@@ -128,13 +135,13 @@ export default function SecurityAgentsTable({ securityAgents, onSecurityAgentVie
         menuPaperSx={{ minWidth: 200, borderRadius: 2 }}
         actions={[
           {
-            label: "Edit",
+            label: securityAgentContent.rowMenu.edit,
             icon: <EditIcon fontSize="small" />,
             disabled: !selected,
             onClick: () => selected && onSecurityAgentEdit(selected),
           },
           {
-            label: "Delete",
+            label: securityAgentContent.rowMenu.delete,
             icon: <DeleteIcon fontSize="small" />,
             disabled: !selected,
             color: "error.main",

@@ -11,6 +11,8 @@ import { CustomEventCard } from "./components/CustomEventCard";
 import { DayHeaderContent } from "./components/DayHeaderContent";
 import { BookingDetailModal } from "./components/BookingDetailModal";
 import { bookingToCalendarEvent, getCalendarSx } from "./utils/utils";
+import { commonContent } from "../../../../content/common";
+import { bookingContent } from "../../../../content/booking";
 
 type Props = {
   bookings?: Booking[];
@@ -76,6 +78,12 @@ export default function BookingsCalendar({ bookings: bookingsProp }: Props) {
             left: "prev,next",
             center: "title",
             right: "timeGridDay,timeGridWeek,dayGridMonth",
+          }}
+          buttonText={{
+            today: commonContent.calendar.today,
+            day: bookingContent.calendarToolbar.day,
+            week: bookingContent.calendarToolbar.week,
+            month: bookingContent.calendarToolbar.month,
           }}
           titleFormat={{
             month: "long",

@@ -12,6 +12,8 @@ import EntityActionsMenu from "../../../../components/EntityActionsMenu";
 import SecurityOrganizationCard from "./SecurityOrganizationCard";
 import { GenericTable } from "../../../../components/GenericTable";
 import type { SecurityOrganization, SecurityOrganizationStatus } from "../data/types";
+import { commonContent } from "../../../../content/common";
+import { securityPartnersContent } from "../../../../content/securityPartners";
 
 const statusColors: Record<SecurityOrganizationStatus, { bg: string; color: string }> = {
   active: { bg: "rgba(34, 197, 94, 0.2)", color: "#22c55e" },
@@ -52,7 +54,7 @@ export default function SecurityOrganizationTable({
   const columns = [
     {
       key: "companyName",
-      label: "Company",
+      label: securityPartnersContent.table.columnCompany,
       render: (o: SecurityOrganization) => (
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
@@ -77,7 +79,7 @@ export default function SecurityOrganizationTable({
               {o.organizationName}
             </Typography>
             <Typography variant="caption" sx={{ color: "text.secondary" }}>
-              ID: {o.id}
+              {securityPartnersContent.table.idPrefix}: {o.id}
             </Typography>
           </Box>
         </Box>
@@ -85,7 +87,7 @@ export default function SecurityOrganizationTable({
     },
     {
       key: "contactPerson",
-      label: "Contact",
+      label: securityPartnersContent.table.columnContact,
       render: (o: SecurityOrganization) => (
         <Typography variant="body2" sx={{ color: "text.primary" }}>
           {o.contactPerson}
@@ -94,7 +96,7 @@ export default function SecurityOrganizationTable({
     },
     {
       key: "emailPhone",
-      label: "Email/Phone",
+      label: securityPartnersContent.table.columnEmailPhone,
       render: (o: SecurityOrganization) => (
         <>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -111,7 +113,7 @@ export default function SecurityOrganizationTable({
     },
     {
       key: "locationServiceArea",
-      label: "Service area",
+      label: securityPartnersContent.table.columnServiceArea,
       render: (o: SecurityOrganization) => (
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {o.serviceAreas}
@@ -120,10 +122,10 @@ export default function SecurityOrganizationTable({
     },
     {
       key: "status",
-      label: "Status",
+      label: securityPartnersContent.table.columnStatus,
       render: (o: SecurityOrganization) => (
         <Chip
-          label={o.status ? "active" : "inactive"}
+          label={o.status ? commonContent.status.active : commonContent.status.inactive}
           size="small"
           sx={{
             bgcolor: statusColors[o.status ? "active" : "inactive"].bg,
@@ -140,7 +142,7 @@ export default function SecurityOrganizationTable({
   return (
     <>
       <GenericTable
-        title="Organizations"
+        title={securityPartnersContent.table.title}
         data={organizations}
         columns={columns}
         withPagination={{
@@ -157,19 +159,19 @@ export default function SecurityOrganizationTable({
         menuPaperSx={{ minWidth: 200, borderRadius: 2 }}
         actions={[
           {
-            label: "View details",
+            label: securityPartnersContent.rowMenu.viewDetails,
             icon: <VisibilityIcon fontSize="small" />,
             disabled: !selectedOrganization || !onOrganizationView,
             onClick: () => selectedOrganization && onOrganizationView?.(selectedOrganization),
           },
           {
-            label: "Edit",
+            label: securityPartnersContent.rowMenu.edit,
             icon: <EditIcon fontSize="small" />,
             disabled: !selectedOrganization || !onOrganizationEdit,
             onClick: () => selectedOrganization && onOrganizationEdit?.(selectedOrganization),
           },
           {
-            label: "Delete",
+            label: securityPartnersContent.rowMenu.delete,
             icon: <DeleteIcon fontSize="small" />,
             disabled: !selectedOrganization || !onOrganizationDelete,
             color: "error.main",

@@ -14,6 +14,20 @@ import {
 import { memo } from "react";
 import type { SecurityAgentFormValues } from "../securityAgentForm.types";
 import { EMPLOYMENT_STATUS_OPTIONS, PHYSICAL_LEVEL_OPTIONS } from "../constants";
+import { securityAgentContent } from "../../../../../../../content/securityAgent";
+import { commonContent } from "../../../../../../../content/common";
+
+const pr = securityAgentContent.modal.professional;
+
+const PRO_FLAG_KEYS = [
+  "hasVipExperience",
+  "hasEventExperience",
+  "hasDriverLicenseB",
+  "hasFirstAidTraining",
+  "weaponExperience",
+  "readyForTravel",
+  "readyForNightShifts",
+] as const satisfies readonly (keyof SecurityAgentFormValues)[];
 
 type Props = {
   readOnly: boolean;
@@ -30,12 +44,12 @@ function SecurityAgentProfessionalSection({
 }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Professional</Typography>
+      <Typography sx={sectionLabelSx}>{pr.sectionTitle}</Typography>
       <Grid container spacing={1.5}>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Employment status"
+              label={pr.employmentStatus.label}
               value={
                 EMPLOYMENT_STATUS_OPTIONS.find(
                   (o) => o.value === formValues.employmentStatus,
@@ -47,7 +61,7 @@ function SecurityAgentProfessionalSection({
               fullWidth
               size="small"
               select
-              label="Employment status"
+              label={pr.employmentStatus.label}
               value={formValues.employmentStatus}
               onChange={onChange("employmentStatus")}
               sx={modalTextFieldSx}
@@ -63,7 +77,7 @@ function SecurityAgentProfessionalSection({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Physical level"
+              label={pr.physicalLevel.label}
               value={
                 PHYSICAL_LEVEL_OPTIONS.find(
                   (o) => o.value === formValues.physicalLevel,
@@ -75,7 +89,7 @@ function SecurityAgentProfessionalSection({
               fullWidth
               size="small"
               select
-              label="Physical level"
+              label={pr.physicalLevel.label}
               value={formValues.physicalLevel}
               onChange={onChange("physicalLevel")}
               sx={modalTextFieldSx}
@@ -91,14 +105,14 @@ function SecurityAgentProfessionalSection({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Professional card number"
+              label={pr.professionalCardNumber.label}
               value={formValues.professionalCardNumber}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Professional card number"
+              label={pr.professionalCardNumber.label}
               value={formValues.professionalCardNumber}
               onChange={onChange("professionalCardNumber")}
               sx={modalTextFieldSx}
@@ -107,12 +121,12 @@ function SecurityAgentProfessionalSection({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="CNAPS number" value={formValues.cnapsNumber} />
+            <DetailField label={pr.cnapsNumber.label} value={formValues.cnapsNumber} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="CNAPS number"
+              label={pr.cnapsNumber.label}
               value={formValues.cnapsNumber}
               onChange={onChange("cnapsNumber")}
               sx={modalTextFieldSx}
@@ -121,12 +135,12 @@ function SecurityAgentProfessionalSection({
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Card issued" value={formValues.cardIssuedAt} />
+            <DetailField label={pr.cardIssuedAt.label} value={formValues.cardIssuedAt} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Card issued"
+              label={pr.cardIssuedAt.label}
               type="date"
               slotProps={{ inputLabel: { shrink: true } }}
               value={formValues.cardIssuedAt}
@@ -138,14 +152,14 @@ function SecurityAgentProfessionalSection({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Card expires"
+              label={pr.cardExpiresAt.label}
               value={formValues.cardExpiresAt}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Card expires"
+              label={pr.cardExpiresAt.label}
               type="date"
               slotProps={{ inputLabel: { shrink: true } }}
               value={formValues.cardExpiresAt}
@@ -157,15 +171,15 @@ function SecurityAgentProfessionalSection({
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Specializations"
+              label={pr.specializations.label}
               value={formValues.specializations}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Specializations"
-              placeholder="Comma-separated"
+              label={pr.specializations.label}
+              placeholder={pr.specializations.placeholder}
               value={formValues.specializations}
               onChange={onChange("specializations")}
               sx={modalTextFieldSx}
@@ -175,14 +189,14 @@ function SecurityAgentProfessionalSection({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Experience (years)"
+              label={pr.experienceYears.label}
               value={formValues.experienceYears}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Experience (years)"
+              label={pr.experienceYears.label}
               value={formValues.experienceYears}
               onChange={onChange("experienceYears")}
               sx={modalTextFieldSx}
@@ -192,14 +206,14 @@ function SecurityAgentProfessionalSection({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Additional licenses"
+              label={pr.additionalLicenses.label}
               value={formValues.additionalLicenses}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Additional licenses"
+              label={pr.additionalLicenses.label}
               value={formValues.additionalLicenses}
               onChange={onChange("additionalLicenses")}
               sx={modalTextFieldSx}
@@ -207,22 +221,14 @@ function SecurityAgentProfessionalSection({
           )}
         </Grid>
 
-        {(
-          [
-            ["hasVipExperience", "VIP experience"],
-            ["hasEventExperience", "Event experience"],
-            ["hasDriverLicenseB", "Driver license B"],
-            ["hasFirstAidTraining", "First aid training"],
-            ["weaponExperience", "Weapon experience"],
-            ["readyForTravel", "Ready for travel"],
-            ["readyForNightShifts", "Ready for night shifts"],
-          ] as const
-        ).map(([key, label]) => (
+        {PRO_FLAG_KEYS.map((key) => {
+          const label = (pr.flags as Record<string, string>)[key];
+          return (
           <Grid key={key} size={{ xs: 12, md: 6 }}>
             {readOnly ? (
               <DetailField
                 label={label}
-                value={formValues[key] ? "Yes" : "No"}
+                value={formValues[key] ? commonContent.boolean.yes : commonContent.boolean.no}
               />
             ) : (
               <FormControlLabel
@@ -236,7 +242,8 @@ function SecurityAgentProfessionalSection({
               />
             )}
           </Grid>
-        ))}
+          );
+        })}
       </Grid>
     </>
   );

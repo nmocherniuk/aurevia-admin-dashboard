@@ -9,6 +9,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GenericTable } from "../../../../components/GenericTable";
+import { driversContent } from "../../../../content/drivers";
+import { commonContent } from "../../../../content/common";
 
 const activeChip = {
   bg: "rgba(34, 197, 94, 0.2)",
@@ -53,7 +55,7 @@ export default function DriversOrganizationsTable({
   const columns = [
     {
       key: "organization",
-      label: "Organization",
+      label: driversContent.table.columnOrganization,
       render: (org: DriverOrganization) => (
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
@@ -79,7 +81,7 @@ export default function DriversOrganizationsTable({
               {org.organizationName}
             </Typography>
             <Typography variant="caption" sx={{ color: "text.secondary" }}>
-              ID: {org.id}
+              {driversContent.table.idPrefix}: {org.id}
             </Typography>
           </Box>
         </Box>
@@ -87,7 +89,7 @@ export default function DriversOrganizationsTable({
     },
     {
       key: "contact",
-      label: "Contact",
+      label: driversContent.table.columnContact,
       render: (org: DriverOrganization) => (
         <>
           <Typography variant="body2" sx={{ color: "text.primary" }}>
@@ -104,7 +106,7 @@ export default function DriversOrganizationsTable({
     },
     {
       key: "serviceAreas",
-      label: "Service area",
+      label: driversContent.table.columnServiceArea,
       render: (org: DriverOrganization) => (
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {org.serviceAreas}
@@ -113,19 +115,21 @@ export default function DriversOrganizationsTable({
     },
     {
       key: "status",
-      label: "Status",
+      label: driversContent.table.columnStatus,
       render: (org: DriverOrganization) => {
         const style = org.status ? activeChip : inactiveChip;
+        const label = org.status
+          ? commonContent.status.active
+          : commonContent.status.inactive;
         return (
           <Chip
-            label={org.status ? "active" : "inactive"}
+            label={label}
             size="small"
             sx={{
               bgcolor: style.bg,
               color: style.color,
               fontWeight: 700,
               fontSize: "0.7rem",
-              textTransform: "capitalize",
             }}
           />
         );
@@ -136,7 +140,7 @@ export default function DriversOrganizationsTable({
   return (
     <>
       <GenericTable
-        title="Organizations"
+        title={driversContent.table.title}
         withPagination={{
           pageSize: 6,
         }}
@@ -162,19 +166,19 @@ export default function DriversOrganizationsTable({
         menuPaperSx={{ minWidth: 200, borderRadius: 2 }}
         actions={[
           {
-            label: "View details",
+            label: driversContent.rowMenu.viewDetails,
             icon: <VisibilityIcon fontSize="small" />,
             disabled: !selected,
             onClick: () => selected && onViewDetails(selected),
           },
           {
-            label: "Edit",
+            label: driversContent.rowMenu.edit,
             icon: <EditIcon fontSize="small" />,
             disabled: !selected,
             onClick: () => selected && onEdit(selected),
           },
           {
-            label: "Delete",
+            label: driversContent.rowMenu.delete,
             icon: <DeleteIcon fontSize="small" />,
             disabled: !selected,
             color: "error.main",

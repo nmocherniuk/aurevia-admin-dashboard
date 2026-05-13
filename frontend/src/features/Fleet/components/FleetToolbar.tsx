@@ -3,6 +3,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchField from "../../../components/SearchField";
 import FilterPaper from "../../../components/FilterPaper";
+import { commonContent } from "../../../content/common";
+import { vehiclesContent } from "../../../content/vehicles";
 
 const outlineButtonSx = {
   flex: 1,
@@ -26,7 +28,7 @@ export default function FleetToolbar() {
         }}
       >
         <SearchField
-          placeholder="Search client, ID, or location..."
+          placeholder={vehiclesContent.toolbar.searchPlaceholder}
           sx={{
             flex: { xs: "1 1 auto", sm: "1 1 280px" },
             minWidth: 0,
@@ -34,10 +36,10 @@ export default function FleetToolbar() {
         />
         <Box sx={{ display: "flex", gap: 1, flex: { xs: "1 1 auto", sm: "none" } }}>
           <Button variant="outlined" startIcon={<FilterListIcon />} sx={outlineButtonSx}>
-            Filter
+            {commonContent.dataTable.filter}
           </Button>
           <Button variant="outlined" startIcon={<FileDownloadIcon />} sx={outlineButtonSx}>
-            Export
+            {commonContent.dataTable.export}
           </Button>
         </Box>
       </Box>

@@ -18,6 +18,7 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import useTablePagination from "../hooks/useTablePaginationRange";
 import { useState } from "react";
+import { commonContent } from "../content/common";
 
 export type Column<T> = {
   key: string;
@@ -70,7 +71,7 @@ export function GenericTable<T>({
 
   if (!isDesktop && renderMobileCard) {
     return (
-      <MobileListContainer title="Drivers">
+      <MobileListContainer title={title}>
         {data.map((item, i) => (
           <Fragment key={i}>{renderMobileCard(item)}</Fragment>
         ))}
@@ -113,7 +114,7 @@ export function GenericTable<T>({
               ))}
               {actions && (
                 <TableCell sx={{ ...tableCellStyles, width: "49px" }}>
-                  Actions
+                  {commonContent.dataTable.actionsColumn}
                 </TableCell>
               )}
             </TableRow>
@@ -169,7 +170,8 @@ export function GenericTable<T>({
             variant="caption"
             sx={{ color: "text.secondary", fontWeight: 600 }}
           >
-            SHOWING {from}-{to} OF {total} {entityLabel}
+            {commonContent.dataTable.paginationShowing} {from}-{to}{" "}
+            {commonContent.dataTable.paginationOf} {total} {entityLabel}
           </Typography>
           <Box sx={{ display: "flex", gap: 0.5 }}>
             <IconButton

@@ -9,6 +9,10 @@ import { sectionLabelSx } from "../../../../../../../components/ui/modalStyles";
 import { memo } from "react";
 import type { SecurityAgentFormValues } from "../securityAgentForm.types";
 import { DOCUMENT_PROVIDED_OPTIONS } from "../constants";
+import { commonContent } from "../../../../../../../content/common";
+import { securityAgentContent } from "../../../../../../../content/securityAgent";
+
+const md = securityAgentContent.modal.documents;
 
 type Props = {
   readOnly: boolean;
@@ -25,7 +29,7 @@ function SecurityAgentDocumentsSection({
 }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Documents (provided)</Typography>
+      <Typography sx={sectionLabelSx}>{md.sectionTitle}</Typography>
       <Grid container spacing={2}>
         {DOCUMENT_PROVIDED_OPTIONS.map((c, index) => {
           const isLastOdd =
@@ -37,7 +41,7 @@ function SecurityAgentDocumentsSection({
               {readOnly ? (
                 <DetailField
                   label={c.label}
-                  value={formValues[c.key] ? "Yes" : "No"}
+                  value={formValues[c.key] ? commonContent.boolean.yes : commonContent.boolean.no}
                 />
               ) : (
                 <FormControlLabel

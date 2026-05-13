@@ -5,6 +5,9 @@ import { formatMoney } from "../utils/formatMoney";
 import { sectionLabelSx } from "../../../components/ui/modalStyles";
 import DetailField from "../../../components/DetailField";
 import BaseModal from "../../../components/BaseModal";
+import { paymentsContent } from "../../../content/payments";
+
+const dm = paymentsContent.detailModal;
 
 type Props = {
   open: boolean;
@@ -32,74 +35,75 @@ export default function PaymentDetailModal({
             variant="h6"
             sx={{ fontWeight: 700, color: "text.primary" }}
           >
-            Payment — {payment.bookingId}
+            {dm.titlePrefix}
+            {payment.bookingId}
           </Typography>
         </>
       }
     >
       <DetailField
-        label="Client"
+        label={dm.client}
         value={payment.clientName}
         emptyAsDash={false}
       />
       <DetailField
-        label="Booking"
+        label={dm.booking}
         value={payment.bookingId}
         emptyAsDash={false}
       />
       <DetailField
-        label="Trip route"
+        label={dm.tripRoute}
         value={payment.route}
         emptyAsDash={false}
       />
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, mt: 0 }}>
-        <DetailField label="Vehicle" value={payment.vehicle} />
-        <DetailField label="Driver" value={payment.driverName} />
+        <DetailField label={dm.vehicle} value={payment.vehicle} />
+        <DetailField label={dm.driver} value={payment.driverName} />
       </Box>
 
       <DetailField
-        label="Amount (charged)"
+        label={dm.amountCharged}
         value={formatMoney(payment.amount, payment.currency)}
         emptyAsDash={false}
       />
       {payment.customerPrice != null ? (
         <DetailField
-          label="Customer price (snapshot)"
+          label={dm.customerPriceSnapshot}
           value={formatMoney(payment.customerPrice, payment.currency)}
         />
       ) : null}
       {payment.partnerPayout != null ? (
         <DetailField
-          label="Partner payout (snapshot)"
+          label={dm.partnerPayoutSnapshot}
           value={formatMoney(payment.partnerPayout, payment.currency)}
         />
       ) : null}
       {payment.platformMargin != null ? (
         <DetailField
-          label="Platform margin (snapshot)"
+          label={dm.platformMarginSnapshot}
           value={formatMoney(payment.platformMargin, payment.currency)}
         />
       ) : null}
       <DetailField
-        label="Stripe PaymentIntent"
+        label={dm.stripePaymentIntent}
         value={payment.stripePaymentIntentId ?? "—"}
         emptyAsDash={false}
       />
       <DetailField
-        label="Stripe payment status"
+        label={dm.stripePaymentStatus}
         value={payment.stripeStatus ?? payment.paymentStatus}
         emptyAsDash={false}
       />
       <DetailField
-        label="Payment method"
+        label={dm.paymentMethod}
         value={`${payment.paymentMethod}${payment.cardLast4 ? ` •••• ${payment.cardLast4}` : ""}`}
         emptyAsDash={false}
       />
 
       {payment.timeline && payment.timeline.length > 0 && (
         <>
-          <Typography sx={sectionLabelSx}>Payment timeline</Typography>
+          <Typography sx={sectionLabelSx}>{dm.timeline}</Typography>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             {payment.timeline.map((item, i) => (
               <Box

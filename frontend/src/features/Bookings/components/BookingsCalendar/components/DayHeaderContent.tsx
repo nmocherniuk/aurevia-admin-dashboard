@@ -4,7 +4,9 @@ type DayHeaderContentProps = {
 };
 
 export function DayHeaderContent({ date, isToday }: DayHeaderContentProps) {
-  const weekday = date.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase();
+  const weekday = date
+    .toLocaleDateString("fr-FR", { weekday: "short" })
+    .toUpperCase();
   const dayNum = date.getDate();
   return (
     <>

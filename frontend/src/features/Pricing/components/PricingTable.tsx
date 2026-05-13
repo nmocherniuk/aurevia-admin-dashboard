@@ -5,6 +5,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import type { FleetClass } from "../../Fleet/data/dummyFleet";
 import type { VehiclePricing } from "../data/pricingData";
+import { fleetClassLabel } from "../../../content/vehicles";
+import { pricingContent } from "../../../content/pricing";
 import { GenericTable } from "../../../components/GenericTable";
 import EntityActionsMenu from "../../../components/EntityActionsMenu";
 import PricingCard from "./PricingCard";
@@ -71,10 +73,10 @@ export default function PricingTable({ pricingData, onEditRow }: Props) {
     },
     {
       key: "class",
-      label: "Class",
+      label: pricingContent.table.columnClass,
       render: (row: VehiclePricing) => (
         <Chip
-          label={row.vehicle.class}
+          label={fleetClassLabel(row.vehicle.class)}
           size="small"
           sx={{
             bgcolor: classColors[row.vehicle.class as FleetClass].bg,
@@ -87,7 +89,7 @@ export default function PricingTable({ pricingData, onEditRow }: Props) {
     },
     {
       key: "perHour",
-      label: "Price per hour",
+      label: pricingContent.table.columnPricePerHour,
       render: (row: VehiclePricing) => (
         <Typography variant="body2" sx={{ color: "text.primary" }}>
           {row.perHour}
@@ -96,7 +98,7 @@ export default function PricingTable({ pricingData, onEditRow }: Props) {
     },
     {
       key: "perKm",
-      label: "Price per KM",
+      label: pricingContent.table.columnPricePerKm,
       render: (row: VehiclePricing) => (
         <Typography variant="body2" sx={{ color: "text.primary" }}>
           {row.perKm}
@@ -108,7 +110,7 @@ export default function PricingTable({ pricingData, onEditRow }: Props) {
   return (
     <>
       <GenericTable
-        title="Vehicle pricing"
+        title={pricingContent.table.title}
         columns={columns}
         data={pricingData}
         actions={openMenu}
@@ -125,7 +127,7 @@ export default function PricingTable({ pricingData, onEditRow }: Props) {
         menuPaperSx={{ minWidth: 200, borderRadius: 2 }}
         actions={[
           {
-            label: "Edit",
+            label: pricingContent.rowMenu.edit,
             icon: <EditIcon fontSize="small" />,
             disabled: !selected,
             onClick: () => selected && onEditRow(selected),

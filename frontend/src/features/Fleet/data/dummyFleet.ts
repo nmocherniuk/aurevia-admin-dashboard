@@ -1,3 +1,4 @@
+import { vehiclesContent } from "../../../content/vehicles";
 import type { FleetVehicle } from "../components/ModalManagement/fleetManagementForm.types";
 
 export type { FleetVehicle };
@@ -6,8 +7,8 @@ export type FleetClass = "Comfort" | "Business" | "Van";
 export type FleetStatus = "ACTIVE" | "INACTIVE";
 
 export const FLEET_STATUS_LABELS: Record<FleetStatus, string> = {
-  ACTIVE: "Active",
-  INACTIVE: "Inactive",
+  ACTIVE: vehiclesContent.fleetStatus.ACTIVE,
+  INACTIVE: vehiclesContent.fleetStatus.INACTIVE,
 };
 
 export const DUMMY_FLEET: FleetVehicle[] = [

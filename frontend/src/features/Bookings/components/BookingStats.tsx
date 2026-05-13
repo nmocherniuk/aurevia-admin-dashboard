@@ -1,13 +1,15 @@
 import { Box } from "@mui/material";
 import CardStat from "../../../components/CardStat";
 
-type Stat = {
+type StatItem = {
+  key: string;
   label: string;
   value: string;
+  icon?: React.ComponentType<{ sx?: object }>;
 };
 
 type Props = {
-  items: Stat[];
+  items: StatItem[];
 };
 
 export default function BookingStats({ items }: Props) {
@@ -24,7 +26,10 @@ export default function BookingStats({ items }: Props) {
       }}
     >
       {items.map((s) => (
-        <CardStat key={s.label} stat={s} />
+        <CardStat
+          key={s.key}
+          stat={{ label: s.label, value: s.value, icon: s.icon }}
+        />
       ))}
     </Box>
   );

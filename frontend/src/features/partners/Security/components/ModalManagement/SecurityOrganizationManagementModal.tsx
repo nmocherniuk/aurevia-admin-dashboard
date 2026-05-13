@@ -12,6 +12,9 @@ import OperationsSection from "./components/OperationsSection";
 import FinancialSection from "./components/FinancialSection";
 import type { SecurityOrganization, SecurityOrganizationFormValues } from "../../data/types";
 import { securityOrganizationToFormValues } from "./securityOrganizationForm.mapper";
+import { securityPartnersContent } from "../../../../../content/securityPartners";
+
+const om = securityPartnersContent.organizationModal;
 
 type Props = {
   open: boolean;
@@ -62,10 +65,10 @@ export default function SecurityOrganizationManagementModal({
             sx={{ fontWeight: 700, color: "text.primary" }}
           >
             {readOnly
-              ? "Organization details"
+              ? om.titles.readOnly
               : organization
-                ? "Edit Organization"
-                : "Add Organization"}
+                ? om.titles.edit
+                : om.titles.create}
           </Typography>
         </>
       }
@@ -88,7 +91,7 @@ export default function SecurityOrganizationManagementModal({
                 },
               }}
             >
-              Cancel
+              {om.cancel}
             </Button>
             <Button
               variant="contained"
@@ -102,7 +105,7 @@ export default function SecurityOrganizationManagementModal({
                 px: 2,
               }}
             >
-              {organization ? "Save changes" : "Add Organization"}
+              {organization ? om.save : om.addOrganization}
             </Button>
           </>
         ) : undefined

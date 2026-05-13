@@ -15,6 +15,9 @@ import SecurityAgentProfessionalSection from "./components/SecurityAgentProfessi
 import SecurityAgentDocumentsSection from "./components/SecurityAgentDocumentsSection";
 import SecurityAgentOperationsSection from "./components/SecurityAgentOperationsSection";
 import { securityAgentToFormValues } from "./securityAgent.mapper";
+import { securityAgentContent } from "../../../../../../content/securityAgent";
+
+const m = securityAgentContent.modal;
 
 type Props = {
   open: boolean;
@@ -71,10 +74,10 @@ export default function SecurityAgentManagementModal({
             sx={{ fontWeight: 700, color: "text.primary" }}
           >
             {readOnly
-              ? "Security agent details"
+              ? m.titles.readOnly
               : securityAgent
-                ? "Edit security agent"
-                : "Add security agent"}
+                ? m.titles.edit
+                : m.titles.create}
           </Typography>
         </>
       }
@@ -97,7 +100,7 @@ export default function SecurityAgentManagementModal({
                 },
               }}
             >
-              Cancel
+              {m.cancel}
             </Button>
             <Button
               variant="contained"
@@ -111,7 +114,7 @@ export default function SecurityAgentManagementModal({
                 px: 2,
               }}
             >
-              {securityAgent ? "Save changes" : "Add security agent"}
+              {securityAgent ? m.save : m.addAgent}
             </Button>
           </>
         ) : undefined
@@ -119,7 +122,7 @@ export default function SecurityAgentManagementModal({
     >
       {securityAgent ? (
         <>
-          <Typography sx={sectionLabelSx}>Security agent ID</Typography>
+          <Typography sx={sectionLabelSx}>{m.agentIdSection}</Typography>
           <Typography variant="body2" sx={{ mb: 1, color: "text.primary" }}>
             #{securityAgent.id}
           </Typography>

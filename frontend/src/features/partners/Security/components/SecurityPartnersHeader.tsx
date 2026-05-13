@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PageHeader from "../../../../components/PageHeader";
+import { securityPartnersContent } from "../../../../content/securityPartners";
 
 type Props = { onAddOrganization?: () => void };
 
@@ -18,8 +19,8 @@ const primaryButtonSx = {
 export default function SecurityPartnersHeader({ onAddOrganization }: Props) {
   return (
     <PageHeader
-      title="Security / Partners"
-      subtitle="Manage security companies and bodyguards"
+      title={securityPartnersContent.page.title}
+      subtitle={securityPartnersContent.page.subtitle}
       titleSx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
       subtitleSx={{ fontSize: { xs: "0.875rem", md: "1rem" } }}
       sx={{ pt: { xs: 1, md: 2 } }}
@@ -30,7 +31,7 @@ export default function SecurityPartnersHeader({ onAddOrganization }: Props) {
           onClick={onAddOrganization}
           sx={primaryButtonSx}
         >
-          Add Security Organization
+          {securityPartnersContent.actions.addOrganization}
         </Button>
       }
     />

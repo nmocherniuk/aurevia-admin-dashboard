@@ -1,10 +1,11 @@
 import PageHeader from "../../../components/PageHeader";
+import { dashboardContent } from "../../../content/dashboard";
 
-export default function PricingHeader() {
+export default function DashboardHeader() {
   return (
     <PageHeader
-      title="Dashboard"
-      subtitle="View your dashboard and analytics"
+      title={dashboardContent.header.title}
+      subtitle={dashboardContent.header.subtitle}
       titleSx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
       subtitleSx={{ fontSize: { xs: "0.875rem", md: "1rem" } }}
       sx={{ pt: { xs: 1, md: 2 } }}

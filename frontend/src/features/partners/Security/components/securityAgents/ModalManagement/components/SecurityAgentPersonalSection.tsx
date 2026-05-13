@@ -7,6 +7,9 @@ import {
 import { memo, type ChangeEvent } from "react";
 import type { SecurityAgentFormValues } from "../securityAgentForm.types";
 import { LANGUAGE_OPTIONS } from "../../../ModalManagement/constants";
+import { securityAgentContent } from "../../../../../../../content/securityAgent";
+
+const mp = securityAgentContent.modal.personal;
 
 type Props = {
   readOnly: boolean;
@@ -19,16 +22,16 @@ type Props = {
 function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Personal</Typography>
+      <Typography sx={sectionLabelSx}>{mp.sectionTitle}</Typography>
       <Grid container spacing={1.5}>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="First name" value={formValues.firstName} />
+            <DetailField label={mp.firstName.label} value={formValues.firstName} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="First name"
+              label={mp.firstName.label}
               value={formValues.firstName}
               onChange={onChange("firstName")}
               sx={modalTextFieldSx}
@@ -38,12 +41,12 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Last name" value={formValues.lastName} />
+            <DetailField label={mp.lastName.label} value={formValues.lastName} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Last name"
+              label={mp.lastName.label}
               value={formValues.lastName}
               onChange={onChange("lastName")}
               sx={modalTextFieldSx}
@@ -53,12 +56,12 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Birth date" value={formValues.birthDate} />
+            <DetailField label={mp.birthDate.label} value={formValues.birthDate} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Birth date"
+              label={mp.birthDate.label}
               type="date"
               slotProps={{ inputLabel: { shrink: true } }}
               value={formValues.birthDate}
@@ -69,12 +72,12 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Nationality" value={formValues.nationality} />
+            <DetailField label={mp.nationality.label} value={formValues.nationality} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Nationality"
+              label={mp.nationality.label}
               value={formValues.nationality}
               onChange={onChange("nationality")}
               sx={modalTextFieldSx}
@@ -83,12 +86,12 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Phone" value={formValues.phone} />
+            <DetailField label={mp.phone.label} value={formValues.phone} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Phone"
+              label={mp.phone.label}
               value={formValues.phone}
               onChange={onChange("phone")}
               sx={modalTextFieldSx}
@@ -97,12 +100,12 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Email" value={formValues.email} />
+            <DetailField label={mp.email.label} value={formValues.email} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Email"
+              label={mp.email.label}
               type="email"
               value={formValues.email}
               onChange={onChange("email")}
@@ -112,12 +115,12 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         </Grid>
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
-            <DetailField label="Address" value={formValues.address} />
+            <DetailField label={mp.address.label} value={formValues.address} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Address"
+              label={mp.address.label}
               multiline
               minRows={2}
               value={formValues.address}
@@ -129,7 +132,7 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Languages spoken"
+              label={mp.languagesSpoken.label}
               value={(formValues.languages ?? []).join(", ")}
             />
           ) : (
@@ -137,7 +140,7 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
               fullWidth
               size="small"
               select
-              label="Languages spoken"
+              label={mp.languagesSpoken.label}
               value={formValues.languages ?? []}
               SelectProps={{ multiple: true }}
               onChange={(e) =>
@@ -156,14 +159,14 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Emergency contact"
+              label={mp.emergencyContact.label}
               value={formValues.emergencyContact}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Emergency contact"
+              label={mp.emergencyContact.label}
               value={formValues.emergencyContact}
               onChange={onChange("emergencyContact")}
               sx={modalTextFieldSx}
@@ -173,14 +176,14 @@ function SecurityAgentPersonalSection({ readOnly, formValues, onChange }: Props)
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Profile photo URL"
+              label={mp.profilePhotoUrl.label}
               value={formValues.profilePhotoUrl}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Profile photo URL"
+              label={mp.profilePhotoUrl.label}
               value={formValues.profilePhotoUrl}
               onChange={onChange("profilePhotoUrl")}
               sx={modalTextFieldSx}

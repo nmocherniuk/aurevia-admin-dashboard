@@ -5,6 +5,7 @@ import LocalTaxiIcon from "@mui/icons-material/LocalTaxi";
 import CardStat from "../../../components/CardStat";
 import { useMemo } from "react";
 import type { FleetVehicle } from "./ModalManagement/fleetManagementForm.types";
+import { vehiclesContent } from "../../../content/vehicles";
 
 type Props = {
   vehicles: FleetVehicle[];
@@ -18,17 +19,17 @@ export default function FleetStats({ vehicles }: Props) {
 
     return [
       {
-        label: "Active",
+        label: vehiclesContent.stats.active,
         value: String(active),
         icon: DirectionsCarIcon,
       },
       {
-        label: "Inactive",
+        label: vehiclesContent.stats.inactive,
         value: String(inactive),
         icon: BlockIcon,
       },
       {
-        label: "Total fleet",
+        label: vehiclesContent.stats.totalFleet,
         value: String(total),
         icon: LocalTaxiIcon,
       },

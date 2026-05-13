@@ -4,6 +4,9 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import type { VehiclePricing } from "../data/pricingData";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import type { FleetClass } from "../../Fleet/data/dummyFleet";
+import { commonContent } from "../../../content/common";
+import { fleetClassLabel } from "../../../content/vehicles";
+import { pricingContent } from "../../../content/pricing";
 
 const classColors: Record<FleetClass, { bg: string; color: string }> = {
   Comfort: { bg: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.9)" },
@@ -61,7 +64,7 @@ export default function PricingCard({ row, onEditRow }: Props) {
               {row.vehicle.vehicleName}
             </Typography>
             <Chip
-              label={row.vehicle.class}
+              label={fleetClassLabel(row.vehicle.class)}
               size="small"
               sx={{
                 mt: 0.5,
@@ -77,7 +80,7 @@ export default function PricingCard({ row, onEditRow }: Props) {
           <IconButton
             size="small"
             sx={{ color: "text.secondary" }}
-            aria-label="actions"
+            aria-label={commonContent.dataTable.actionsColumn}
             onClick={() => onEditRow(row)}
           >
             <MoreVertIcon />
@@ -86,13 +89,17 @@ export default function PricingCard({ row, onEditRow }: Props) {
       </Box>
       <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", flexDirection: "column" }}>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          Per hour: <strong style={{ color: "inherit" }}>{row.perHour}</strong>
+          {pricingContent.mobile.perHour}:{" "}
+          <strong style={{ color: "inherit" }}>{row.perHour}</strong>
         </Typography>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          Per KM: <strong style={{ color: "inherit" }}>{row.perKm}</strong>
+          {pricingContent.mobile.perKm}:{" "}
+          <strong style={{ color: "inherit" }}>{row.perKm}</strong>
         </Typography>
         <Typography variant="caption" sx={{ color: "text.disabled" }}>
-          Min {row.minimumFare} · Hol +{row.holidaySurchargePercent}% · Night +{row.nightSurchargePercent}%
+          {pricingContent.mobile.summaryMin} {row.minimumFare} ·{" "}
+          {pricingContent.mobile.summaryHoliday} +{row.holidaySurchargePercent}% ·{" "}
+          {pricingContent.mobile.summaryNight} +{row.nightSurchargePercent}%
         </Typography>
       </Box>
     </Paper>

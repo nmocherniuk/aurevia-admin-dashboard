@@ -1,6 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import PageHeader from "../../../../components/PageHeader";
 import { Button } from "@mui/material";
+import { driversContent } from "../../../../content/drivers";
 
 type Props = {
   onAddOrganization?: () => void;
@@ -22,8 +23,8 @@ export default function DriversOrganizationsHeader({
 }: Props) {
   return (
     <PageHeader
-      title="Drivers Management"
-      subtitle="Organizations and their drivers"
+      title={driversContent.page.title}
+      subtitle={driversContent.page.subtitle}
       titleSx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
       subtitleSx={{ fontSize: { xs: "0.875rem", md: "1rem" } }}
       sx={{ pt: { xs: 1, md: 2 } }}
@@ -34,7 +35,7 @@ export default function DriversOrganizationsHeader({
           onClick={onAddOrganization}
           sx={primaryButtonSx}
         >
-          Add New Driver Organization
+          {driversContent.actions.addOrganization}
         </Button>
       }
     />

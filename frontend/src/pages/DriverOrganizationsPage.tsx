@@ -20,6 +20,7 @@ import { queryKeys } from "../api/queryKeys";
 import { formValuesToDriverOrganization } from "../features/partners/Drivers/components/ModalManagement/driverOrganizationForm.mapper";
 import DriversOrganizationsStats from "../features/partners/Drivers/components/DriversOrganizationsStats";
 import { useToast } from "../providers/ToastProvider";
+import { driversContent } from "../content/drivers";
 
 export default function DriverOrganizationsPage() {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ export default function DriverOrganizationsPage() {
     driverOrganizationsError && !isNotFoundError(driverOrganizationsError)
       ? getApiErrorMessage(
         driverOrganizationsError,
-        "Failed to load organizations",
+        driversContent.errors.loadList,
       )
       : null;
 
@@ -80,8 +81,8 @@ export default function DriverOrganizationsPage() {
 
       showToast({
         message: organizationId
-          ? "Organization updated successfully."
-          : "Organization created successfully.",
+          ? driversContent.toasts.updated
+          : driversContent.toasts.created,
         severity: "success",
       });
 
@@ -91,7 +92,7 @@ export default function DriverOrganizationsPage() {
         organization: null,
       }));
     } catch (e) {
-      const msg = getApiErrorMessage(e, "Failed to save organization");
+      const msg = getApiErrorMessage(e, driversContent.errors.save);
       showToast({ message: msg, severity: "error" });
       throw e;
     }
@@ -145,11 +146,11 @@ export default function DriverOrganizationsPage() {
             </Box>
           ) : listError ? (
             <Box sx={{ py: 8, textAlign: "center", color: "text.secondary" }}>
-              Unable to load organizations.
+              {driversContent.empty.unableToLoad}
             </Box>
           ) : driverOrganizations && driverOrganizations.length === 0 ? (
             <Box sx={{ py: 8, textAlign: "center", color: "text.secondary" }}>
-              No organizations found.
+              {driversContent.empty.noneFound}
             </Box>
           ) : (
             <DriversOrganizationsTable
@@ -165,7 +166,7 @@ export default function DriverOrganizationsPage() {
                   });
                 } catch (e) {
                   setError(
-                    getApiErrorMessage(e, "Failed to load organization"),
+                    getApiErrorMessage(e, driversContent.errors.loadOne),
                   );
                 }
               }}
@@ -179,7 +180,7 @@ export default function DriverOrganizationsPage() {
                   });
                 } catch (e) {
                   setError(
-                    getApiErrorMessage(e, "Failed to load organization"),
+                    getApiErrorMessage(e, driversContent.errors.loadOne),
                   );
                 }
               }}
@@ -215,16 +216,16 @@ export default function DriverOrganizationsPage() {
               });
 
               showToast({
-                message: "Organization deleted successfully.",
+                message: driversContent.toasts.deleted,
                 severity: "success",
               });
             } catch (e) {
-              showToast({ message: getApiErrorMessage(e, "Failed to delete organization"), severity: "error" });
+              showToast({ message: getApiErrorMessage(e, driversContent.errors.delete), severity: "error" });
               throw e;
             }
           }}
-          title="Delete organization?"
-          message="This action cannot be undone. The organization will be deleted permanently."
+          title={driversContent.deleteDialog.title}
+          message={driversContent.deleteDialog.message}
         />
       </Container>
     </Box>

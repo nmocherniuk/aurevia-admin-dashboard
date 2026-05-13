@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import PageHeader from "../../../components/PageHeader";
+import { vehiclesContent } from "../../../content/vehicles";
 
 type Props = { onAddFleet?: () => void };
 
@@ -18,8 +19,8 @@ const primaryButtonSx = {
 export default function FleetHeader({ onAddFleet }: Props) {
   return (
     <PageHeader
-      title="Fleet Management"
-      subtitle="Manage your elite fleet and performance metrics"
+      title={vehiclesContent.page.title}
+      subtitle={vehiclesContent.page.subtitle}
       titleSx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
       subtitleSx={{ fontSize: { xs: "0.875rem", md: "1rem" } }}
       sx={{ pt: { xs: 1, md: 2 } }}
@@ -30,7 +31,7 @@ export default function FleetHeader({ onAddFleet }: Props) {
           onClick={onAddFleet}
           sx={primaryButtonSx}
         >
-          Add New Fleet
+          {vehiclesContent.actions.addFleet}
         </Button>
       }
     />

@@ -1,8 +1,8 @@
 import { Box, Button } from "@mui/material";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import SearchField from "./SearchField";
 import FilterPaper from "./FilterPaper";
+import { commonContent } from "../content/common";
 
 type Props = {
   searchPlaceholder: string;
@@ -47,7 +47,7 @@ export default function EntitySectionToolbar({ searchPlaceholder }: Props) {
             startIcon={<FileDownloadIcon />}
             sx={outlineButtonSx}
           >
-            Export
+            {commonContent.dataTable.export}
           </Button>
         </Box>
       </Box>

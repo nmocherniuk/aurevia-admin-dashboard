@@ -28,6 +28,7 @@ import {
 import { listDrivers } from "../api/drivers";
 import { queryKeys } from "../api/queryKeys";
 import { useToast } from "../providers/ToastProvider";
+import { vehiclesContent } from "../content/vehicles";
 
 export default function FleetPage() {
   const queryClient = useQueryClient();
@@ -100,7 +101,7 @@ export default function FleetPage() {
   const vehiclesError = vehiclesQuery.error;
   const listError =
     vehiclesError && !isNotFoundError(vehiclesError)
-      ? getApiErrorMessage(vehiclesError, "Failed to load vehicles")
+      ? getApiErrorMessage(vehiclesError, vehiclesContent.errors.loadList)
       : null;
 
   const handleDeleteClick = (vehicle: FleetVehicle) => {
@@ -121,12 +122,12 @@ export default function FleetPage() {
         setVehicleToDelete(null);
 
         showToast({
-          message: "Vehicle has been deleted successfully",
+          message: vehiclesContent.toasts.deleted,
           severity: "success",
         });
       } catch (e) {
         showToast({
-          message: "Failed to delete vehicle",
+          message: vehiclesContent.toasts.deleteFailed,
           severity: "error",
         });
         throw e;
@@ -151,13 +152,13 @@ export default function FleetPage() {
       await queryClient.invalidateQueries({ queryKey: queryKeys.drivers.all });
 
       showToast({
-        message: "Vehicle has been saved successfully",
+        message: vehiclesContent.toasts.saved,
         severity: "success",
       });
       setFleetModal((prev) => ({ ...prev, open: false }));
     } catch (e) {
       showToast({
-        message: "Failed to save vehicle",
+        message: vehiclesContent.toasts.saveFailed,
         severity: "error",
       });
       throw e;
@@ -194,11 +195,11 @@ export default function FleetPage() {
             </Box>
           ) : listError ? (
             <Box sx={{ py: 8, textAlign: "center", color: "text.secondary" }}>
-              Unable to load vehicles.
+              {vehiclesContent.empty.unableToLoad}
             </Box>
           ) : allVehicles.length === 0 ? (
             <Box sx={{ py: 8, textAlign: "center", color: "text.secondary" }}>
-              No results
+              {vehiclesContent.empty.noResults}
             </Box>
           ) : (
             <FleetTable
@@ -226,8 +227,8 @@ export default function FleetPage() {
           open={!!vehicleToDelete}
           onClose={() => setVehicleToDelete(null)}
           onConfirm={handleConfirmDelete}
-          title="Видалити авто?"
-          message="Цю дію не можна скасувати. Запис буде видалено назавжди."
+          title={vehiclesContent.deleteDialog.title}
+          message={vehiclesContent.deleteDialog.message}
         />
       </Container>
     </Box>

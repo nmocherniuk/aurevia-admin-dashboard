@@ -16,6 +16,7 @@ import EntityActionsMenu from "../../../components/EntityActionsMenu";
 import FleetCard from "./FleetCard";
 import type { FleetVehicle } from "./ModalManagement/fleetManagementForm.types";
 import { FLEET_STATUS_LABELS, type FleetClass, type FleetStatus } from "../data/dummyFleet";
+import { fleetClassLabel, vehiclesContent } from "../../../content/vehicles";
 import { classColors, statusColors } from "./ModalManagement/constants";
 
 type Props = {
@@ -47,7 +48,7 @@ export default function FleetTable({
   const columns = [
     {
       key: "vehicle",
-      label: "Vehicle",
+      label: vehiclesContent.table.columnVehicle,
       render: (v: FleetVehicle) => (
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
@@ -73,7 +74,7 @@ export default function FleetTable({
               {v.color ? ` · ${v.color}` : ""}
             </Typography>
             <Typography variant="caption" sx={{ color: "text.secondary", display: "block" }}>
-              ID: {v.id}
+              {vehiclesContent.table.idPrefix}: {v.id}
             </Typography>
           </Box>
         </Box>
@@ -81,7 +82,7 @@ export default function FleetTable({
     },
     {
       key: "licensePlate",
-      label: "License Plate",
+      label: vehiclesContent.table.columnLicensePlate,
       render: (v: FleetVehicle) => (
         <Typography variant="body2" sx={{ color: "text.primary" }}>
           {v.licensePlate}
@@ -90,10 +91,10 @@ export default function FleetTable({
     },
     {
       key: "class",
-      label: "Class",
+      label: vehiclesContent.table.columnClass,
       render: (v: FleetVehicle) => (
         <Chip
-          label={v.class}
+          label={fleetClassLabel(v.class)}
           size="small"
           sx={{
             bgcolor: classColors[v.class as FleetClass].bg,
@@ -106,7 +107,7 @@ export default function FleetTable({
     },
     {
       key: "status",
-      label: "Status",
+      label: vehiclesContent.table.columnStatus,
       render: (v: FleetVehicle) => (
         <Chip
           label={FLEET_STATUS_LABELS[v.status as FleetStatus]}
@@ -123,10 +124,10 @@ export default function FleetTable({
     },
     {
       key: "color",
-      label: "Color",
+      label: vehiclesContent.table.columnColor,
       render: (v: FleetVehicle) => (
         <Typography variant="body2" sx={{ color: "text.primary" }}>
-          {v.color || "—"}
+          {v.color || vehiclesContent.table.emptyValue}
         </Typography>
       )
     }
@@ -135,7 +136,7 @@ export default function FleetTable({
   return (
     <>
       <GenericTable
-        title="Fleet"
+        title={vehiclesContent.table.title}
         withPagination={{
           pageSize: 6,
         }}
@@ -160,14 +161,14 @@ export default function FleetTable({
         menuPaperSx={{ minWidth: 200, borderRadius: 2 }}
         actions={[
           {
-            label: "Edit",
+            label: vehiclesContent.rowMenu.edit,
             icon: <EditIcon fontSize="small" />,
             disabled: !selectedVehicle,
             onClick: () =>
               selectedVehicle && onVehicleEdit?.(selectedVehicle),
           },
           {
-            label: "Delete",
+            label: vehiclesContent.rowMenu.delete,
             icon: <DeleteIcon fontSize="small" />,
             disabled: !selectedVehicle,
             color: "error.main",

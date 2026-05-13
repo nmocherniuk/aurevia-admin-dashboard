@@ -7,17 +7,21 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import PersonIcon from "@mui/icons-material/Person";
 import type { SecurityAgent } from "./ModalManagement/securityAgentForm.types";
-
-
+import { commonContent } from "../../../../content/common";
+import { securityAgentContent } from "../../../../content/securityAgent";
 
 const statusStyle = (active: boolean) =>
   active
-    ? { bg: "rgba(34, 197, 94, 0.2)", color: "#22c55e", label: "Active" as const }
+    ? {
+        bg: "rgba(34, 197, 94, 0.2)" as const,
+        color: "#22c55e" as const,
+        label: commonContent.status.active,
+      }
     : {
-      bg: "rgba(255,255,255,0.08)",
-      color: "rgba(255,255,255,0.6)",
-      label: "Inactive" as const,
-    };
+        bg: "rgba(255,255,255,0.08)" as const,
+        color: "rgba(255,255,255,0.6)" as const,
+        label: commonContent.status.inactive,
+      };
 
 
 function displayLanguages(a: SecurityAgent): string {
@@ -40,7 +44,7 @@ function displayLicense(a: SecurityAgent): string {
 function displayExperienceYears(a: SecurityAgent): string {
   const y = a.experienceYears;
   if (y === null || y === undefined || y === "") return "";
-  return `${y} yrs`;
+  return `${y}${securityAgentContent.table.experienceYearsSuffix}`;
 }
 
 
@@ -90,24 +94,24 @@ export default function SecurityAgentCard({ securityAgent: a, onView, onEdit, on
             </Typography>
           </Box>
         </Box>
-        <IconButton size="small" sx={{ color: "text.secondary", flexShrink: 0 }} aria-label="actions" onClick={(e) => { e.stopPropagation(); setMenuAnchor(e.currentTarget); }}>
+        <IconButton size="small" sx={{ color: "text.secondary", flexShrink: 0 }} aria-label={commonContent.dataTable.actionsColumn} onClick={(e) => { e.stopPropagation(); setMenuAnchor(e.currentTarget); }}>
           <MoreVertIcon />
         </IconButton>
       </Box>
       <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} transformOrigin={{ vertical: "top", horizontal: "right" }} slotProps={{ paper: { sx: { minWidth: 160, borderRadius: 2 } } }}>
         <MenuItem onClick={() => { onView(a); setMenuAnchor(null); }}>
           <ListItemIcon><VisibilityIcon fontSize="small" /></ListItemIcon>
-          <ListItemText>View details</ListItemText>
+          <ListItemText>{securityAgentContent.rowMenu.viewDetails}</ListItemText>
         </MenuItem>
 
         <MenuItem onClick={() => { onEdit(a); setMenuAnchor(null); }}>
           <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
-          <ListItemText>Edit</ListItemText>
+          <ListItemText>{securityAgentContent.rowMenu.edit}</ListItemText>
         </MenuItem>
 
         <MenuItem onClick={() => { onDelete(a); setMenuAnchor(null); }} sx={{ color: "error.main" }}>
           <ListItemIcon sx={{ color: "error.main" }}><DeleteIcon fontSize="small" /></ListItemIcon>
-          <ListItemText>Delete</ListItemText>
+          <ListItemText>{securityAgentContent.rowMenu.delete}</ListItemText>
         </MenuItem>
       </Menu>
 

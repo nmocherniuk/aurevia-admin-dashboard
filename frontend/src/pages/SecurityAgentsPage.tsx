@@ -34,6 +34,7 @@ import {
   formValuesToSecurityAgent,
   securityAgentFormToUpdateBody,
 } from "../features/partners/Security/components/securityAgents/ModalManagement/securityAgent.mapper";
+import { securityAgentContent } from "../content/securityAgent";
 
 export default function SecurityAgentsPage() {
   const { organizationId } = useParams<{ organizationId: string }>();
@@ -69,8 +70,8 @@ export default function SecurityAgentsPage() {
   const loadError =
     error && error
       ? isNotFoundError(error)
-        ? "No results"
-        : getApiErrorMessage(error, "Failed to load partner")
+        ? securityAgentContent.empty.noResults
+        : getApiErrorMessage(error, securityAgentContent.errors.loadPartner)
       : null;
 
   const handleSaveSecurityAgent = async (
@@ -92,10 +93,10 @@ export default function SecurityAgentsPage() {
         queryKey: queryKeys.securityAgents.byOrganization(organizationId!),
       });
 
-      showToast({ message: "Bodyguard saved successfully", severity: "success" });
+      showToast({ message: securityAgentContent.toasts.saved, severity: "success" });
       setSecurityAgentModal((prev) => ({ ...prev, open: false }));
     } catch (error) {
-      const msg = getApiErrorMessage(error, "Failed to save bodyguard");
+      const msg = getApiErrorMessage(error, securityAgentContent.errors.save);
       showToast({ message: msg, severity: "error" });
       throw error;
     }
@@ -120,14 +121,14 @@ export default function SecurityAgentsPage() {
     return (
       <Box sx={{ p: 3 }}>
         <Typography variant="body1" color="text.secondary">
-          {loadError ?? "Organization not found."}
+          {loadError ?? securityAgentContent.page.organizationMissing}
         </Typography>
         <Button
           startIcon={<ArrowBackIcon />}
           onClick={() => navigate("/security-partners")}
           sx={{ mt: 2 }}
         >
-          Back to partners
+          {securityAgentContent.page.backToPartners}
         </Button>
       </Box>
     );
@@ -142,10 +143,10 @@ export default function SecurityAgentsPage() {
         <Box sx={{ pt: { xs: 1, md: 2 } }}>
           <PageHeader
             title={organization?.organizationName ?? ""}
-            subtitle={`Manage bodyguards for ${organization?.contactPerson ?? ""}`}
+            subtitle={`${securityAgentContent.page.subtitlePrefix} ${organization?.contactPerson ?? ""}`.trim()}
             titleSx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
             subtitleSx={{ fontSize: { xs: "0.875rem", md: "1rem" } }}
-            withBack={{ label: "Back to organizations", path: "/security-partners" }}
+            withBack={{ label: securityAgentContent.page.withBackLabel, path: "/security-partners" }}
             action={
               <Button
                 variant="contained"
@@ -168,7 +169,7 @@ export default function SecurityAgentsPage() {
                   "&:hover": { bgcolor: "primary.dark" },
                 }}
               >
-                Add security agent
+                {securityAgentContent.page.addAgent}
               </Button>
             }
           />
@@ -223,16 +224,16 @@ export default function SecurityAgentsPage() {
 
               setSecurityAgentToDelete(null);
 
-              showToast({ message: "Security agent deleted successfully", severity: "success" });
+              showToast({ message: securityAgentContent.toasts.deleted, severity: "success" });
             }
             catch (error) {
-              const msg = getApiErrorMessage(error, "Failed to delete security agent");
+              const msg = getApiErrorMessage(error, securityAgentContent.errors.delete);
               showToast({ message: msg, severity: "error" });
               throw error;
             }
           }}
-          title="Delete security agent?"
-          message="This action cannot be undone."
+          title={securityAgentContent.deleteDialog.title}
+          message={securityAgentContent.deleteDialog.message}
         />
       </Container>
     </Box>

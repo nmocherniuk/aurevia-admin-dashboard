@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import PageHeader from "../../../components/PageHeader";
+import { paymentsContent } from "../../../content/payments";
 
 type Props = {
   onWithdraw?: () => void;
@@ -14,8 +15,8 @@ export default function PaymentsHeader({
 }: Props) {
   return (
     <PageHeader
-      title="Payments"
-      subtitle="Manage customer payments and transactions"
+      title={paymentsContent.page.title}
+      subtitle={paymentsContent.page.subtitle}
       titleSx={{ fontWeight: 800, letterSpacing: "-0.02em" }}
       subtitleSx={{ fontSize: { xs: "0.875rem", md: "1rem" } }}
       sx={{ pt: { xs: 1, md: 2 } }}
@@ -35,7 +36,7 @@ export default function PaymentsHeader({
             "&:hover": { bgcolor: "primary.dark" },
           }}
         >
-          {withdrawing ? "Withdrawing..." : "Withdraw"}
+          {withdrawing ? paymentsContent.header.withdrawing : paymentsContent.header.withdraw}
         </Button>
       }
     />

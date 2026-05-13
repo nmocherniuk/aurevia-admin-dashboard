@@ -23,6 +23,7 @@ import LogoIcon from "./components/LogoIcon";
 import SectionTitle from "./components/SectionTitle";
 import { logoutRequest } from "../../api/auth";
 import { useAuthStore } from "../../store/authStore";
+import { commonContent } from "../../content/common";
 
 const drawerWidth = 260;
 
@@ -169,7 +170,7 @@ export default function Sidebar({ open = false, onClose }: SidebarProps) {
                 letterSpacing: "-0.02em",
               }}
             >
-              Aurevia
+              {commonContent.nav.brand.name}
             </Typography>
             <Typography
               variant="caption"
@@ -180,13 +181,13 @@ export default function Sidebar({ open = false, onClose }: SidebarProps) {
                 fontWeight: 600,
               }}
             >
-              Chauffeur Admin
+              {commonContent.nav.brand.subtitle}
             </Typography>
           </Box>
         </Box>
       </Box>
 
-      <SectionTitle>Main Menu</SectionTitle>
+      <SectionTitle>{commonContent.nav.sections.mainMenu}</SectionTitle>
       <List disablePadding sx={{ px: 0, bgcolor: "background.paper" }}>
         {renderListItems(sidebarMenuItems)}
       </List>
@@ -195,7 +196,7 @@ export default function Sidebar({ open = false, onClose }: SidebarProps) {
         sx={{ borderColor: "divider", mx: 2, my: 1, bgcolor: "transparent" }}
       />
 
-      <SectionTitle>Chauffeur Services</SectionTitle>
+      <SectionTitle>{commonContent.nav.sections.chauffeurServices}</SectionTitle>
       <List disablePadding sx={{ px: 0, bgcolor: "background.paper" }}>
         {renderListItems(sidebarDriversItems)}
       </List>
@@ -204,7 +205,7 @@ export default function Sidebar({ open = false, onClose }: SidebarProps) {
         sx={{ borderColor: "divider", mx: 2, my: 1, bgcolor: "transparent" }}
       />
 
-      <SectionTitle>Security Services</SectionTitle>
+      <SectionTitle>{commonContent.nav.sections.securityServices}</SectionTitle>
       <List disablePadding sx={{ px: 0, bgcolor: "background.paper" }}>
         {renderListItems(sidebarSecurityItems)}
       </List>
@@ -213,7 +214,7 @@ export default function Sidebar({ open = false, onClose }: SidebarProps) {
         sx={{ borderColor: "divider", mx: 2, my: 1, bgcolor: "transparent" }}
       />
 
-      <SectionTitle>Financials</SectionTitle>
+      <SectionTitle>{commonContent.nav.sections.financials}</SectionTitle>
       <List disablePadding sx={{ px: 0, bgcolor: "background.paper" }}>
         {renderListItems(sidebarFinancialItems)}
       </List>

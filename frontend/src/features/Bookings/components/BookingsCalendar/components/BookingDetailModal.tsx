@@ -5,6 +5,7 @@ import { STATUS_LABELS } from "../constants";
 import { formatEventTime } from "../utils/utils";
 import { parseDurationToMinutes, addMinutesToTime } from "../../../utils/dateUtils";
 import BaseModal from "../../../../../components/BaseModal";
+import { bookingContent } from "../../../../../content/booking";
 
 type BookingDetailModalProps = {
   open: boolean;
@@ -17,7 +18,7 @@ type BookingDetailModalProps = {
 function formatDateFromBooking(b: Booking): string {
   const [y, m, d] = b.date.split("-").map(Number);
   const date = new Date(y, m - 1, d);
-  return date.toLocaleDateString("uk-UA", {
+  return date.toLocaleDateString("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -49,7 +50,7 @@ export function BookingDetailModal({
       const car = (e.extendedProps?.car ?? "—") as string;
       const status = (e.extendedProps?.status ?? "assigned") as BookingStatus;
       const duration = (e.extendedProps?.duration ?? "") as string;
-      const dateStr = start.toLocaleDateString("uk-UA", {
+      const dateStr = start.toLocaleDateString("fr-FR", {
         weekday: "long",
         day: "numeric",
         month: "long",
@@ -83,12 +84,12 @@ export function BookingDetailModal({
       disableAutoFocus
       title={
         <Typography component="span" variant="h6" sx={{ fontWeight: 700, fontSize: 18 }}>
-          Деталі поїздки
+          {bookingContent.detailModal.title}
         </Typography>
       }
       actions={
         <Button onClick={onClose} variant="contained" color="primary">
-          Закрити
+          {bookingContent.detailModal.close}
         </Button>
       }
     >
@@ -96,7 +97,7 @@ export function BookingDetailModal({
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <Box>
             <Typography variant="caption" color="text.secondary">
-              Дата
+              {bookingContent.detailModal.date}
             </Typography>
             <Typography variant="body1" fontWeight={600}>
               {content.dateStr}
@@ -104,7 +105,7 @@ export function BookingDetailModal({
           </Box>
           <Box>
             <Typography variant="caption" color="text.secondary">
-              Час
+              {bookingContent.detailModal.time}
             </Typography>
             <Typography variant="body1" fontWeight={600}>
               {content.timeStr}
@@ -113,7 +114,7 @@ export function BookingDetailModal({
           {content.duration && (
             <Box>
               <Typography variant="caption" color="text.secondary">
-                Тривалість
+                {bookingContent.detailModal.duration}
               </Typography>
               <Typography variant="body1" fontWeight={600}>
                 {content.duration}
@@ -122,7 +123,7 @@ export function BookingDetailModal({
           )}
           <Box>
             <Typography variant="caption" color="text.secondary">
-              Клієнт
+              {bookingContent.detailModal.client}
             </Typography>
             <Typography variant="body1" fontWeight={600}>
               {content.clientName}
@@ -130,7 +131,7 @@ export function BookingDetailModal({
           </Box>
           <Box>
             <Typography variant="caption" color="text.secondary">
-              Маршрут
+              {bookingContent.detailModal.route}
             </Typography>
             <Typography variant="body1" fontWeight={600}>
               {content.route}
@@ -138,7 +139,7 @@ export function BookingDetailModal({
           </Box>
           <Box>
             <Typography variant="caption" color="text.secondary">
-              Авто
+              {bookingContent.detailModal.vehicle}
             </Typography>
             <Typography variant="body1" fontWeight={600}>
               {content.car}
@@ -146,7 +147,7 @@ export function BookingDetailModal({
           </Box>
           <Box>
             <Typography variant="caption" color="text.secondary">
-              Статус
+              {bookingContent.detailModal.status}
             </Typography>
             <Typography variant="body1" fontWeight={600}>
               {STATUS_LABELS[content.status] ?? content.status}

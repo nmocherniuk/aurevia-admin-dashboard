@@ -3,6 +3,11 @@ import { modalTextFieldSx, sectionLabelSx } from "../../../../../../components/u
 import { memo, type ChangeEvent } from "react";
 import type { SecurityOrganizationFormValues } from "../../../data/types";
 import DetailField from "../../../../../../components/DetailField";
+import { commonContent } from "../../../../../../content/common";
+import { securityPartnersContent } from "../../../../../../content/securityPartners";
+
+const om = securityPartnersContent.organizationModal;
+const bi = om.basicInfo;
 
 type Props = {
   formValues: SecurityOrganizationFormValues;
@@ -15,24 +20,24 @@ type Props = {
 function BasicInfoSection({ formValues, readOnly, handleChange }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Organization ID</Typography>
+      <Typography sx={sectionLabelSx}>{om.sections.organizationId}</Typography>
       <Typography variant="body2" sx={{ mb: 2, color: "text.primary" }}>
         #{formValues.id ?? "—"}
       </Typography>
       <Grid size={{ xs: 12, md: 6 }}>
         {readOnly ? (
           <DetailField
-            label="Organization Name"
+            label={bi.organizationName.label}
             value={formValues.organizationName}
           />
         ) : (
           <TextField
             fullWidth
             size="small"
-            label="Organization Name"
+            label={bi.organizationName.label}
             value={formValues.organizationName}
             onChange={handleChange("organizationName")}
-            helperText="Digits only (if applicable)"
+            helperText={bi.organizationName.helperEdit}
             sx={modalTextFieldSx}
           />
         )}
@@ -40,17 +45,17 @@ function BasicInfoSection({ formValues, readOnly, handleChange }: Props) {
       <Grid size={{ xs: 12, md: 6 }}>
         {readOnly ? (
           <DetailField
-            label="Email"
+            label={bi.email.label}
             value={formValues.email}
           />
         ) : (
           <TextField
             fullWidth
             size="small"
-            label="Email"
+            label={bi.email.label}
             value={formValues.email}
             onChange={handleChange("email")}
-            helperText="Enter a valid email address"
+            helperText={bi.email.helperEdit}
             sx={modalTextFieldSx}
           />
         )}
@@ -58,17 +63,17 @@ function BasicInfoSection({ formValues, readOnly, handleChange }: Props) {
       <Grid size={{ xs: 12, md: 6 }}>
         {readOnly ? (
           <DetailField
-            label="Phone"
+            label={bi.phone.label}
             value={formValues.phone}
           />
         ) : (
           <TextField
             fullWidth
             size="small"
-            label="Phone"
+            label={bi.phone.label}
             value={formValues.phone}
             onChange={handleChange("phone")}
-            helperText="Enter a valid phone number"
+            helperText={bi.phone.helperEdit}
             sx={modalTextFieldSx}
           />
         )}
@@ -76,17 +81,17 @@ function BasicInfoSection({ formValues, readOnly, handleChange }: Props) {
       <Grid size={{ xs: 12, md: 6 }}>
         {readOnly ? (
           <DetailField
-            label="Contact Person"
+            label={bi.contactPerson.label}
             value={formValues.contactPerson}
           />
         ) : (
           <TextField
             fullWidth
             size="small"
-            label="Contact Person"
+            label={bi.contactPerson.label}
             value={formValues.contactPerson}
             onChange={handleChange("contactPerson")}
-            helperText="Enter a valid contact person name"
+            helperText={bi.contactPerson.helperEdit}
             sx={modalTextFieldSx}
           />
         )}
@@ -94,17 +99,17 @@ function BasicInfoSection({ formValues, readOnly, handleChange }: Props) {
       <Grid size={{ xs: 12, md: 6 }}>
         {readOnly ? (
           <DetailField
-            label="Service Areas"
+            label={bi.serviceAreas.label}
             value={formValues.serviceAreas}
           />
         ) : (
           <TextField
             fullWidth
             size="small"
-            label="Service Areas"
+            label={bi.serviceAreas.label}
             value={formValues.serviceAreas}
             onChange={handleChange("serviceAreas")}
-            helperText="Enter the service areas separated by commas"
+            helperText={bi.serviceAreas.helperEdit}
             sx={modalTextFieldSx}
           />
         )}
@@ -112,15 +117,15 @@ function BasicInfoSection({ formValues, readOnly, handleChange }: Props) {
       <Grid size={{ xs: 12, md: 6 }}>
         {readOnly ? (
           <DetailField
-            label="Status"
-            value={formValues.status ? "Active" : "Inactive"}
+            label={bi.status.label}
+            value={formValues.status ? commonContent.status.active : commonContent.status.inactive}
           />
         ) : (
           <TextField
             select
             fullWidth
             size="small"
-            label="Status"
+            label={bi.status.label}
             value={formValues.status ? "active" : "inactive"}
             onChange={(e) => {
               const checked = e.target.value === "active";
@@ -135,8 +140,8 @@ function BasicInfoSection({ formValues, readOnly, handleChange }: Props) {
             }}
             sx={modalTextFieldSx}
           >
-            <MenuItem value="active">Active</MenuItem>
-            <MenuItem value="inactive">Inactive</MenuItem>
+            <MenuItem value="active">{commonContent.status.active}</MenuItem>
+            <MenuItem value="inactive">{commonContent.status.inactive}</MenuItem>
           </TextField>
         )}
       </Grid>

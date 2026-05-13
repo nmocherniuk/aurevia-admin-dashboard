@@ -1,3 +1,5 @@
+import { commonContent } from "../../../content/common";
+
 export function toDateKey(d: Date): string {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -16,11 +18,11 @@ export function getWeekStart(date: Date): Date {
 
 export function getDateLabel(date: Date, todayKey: string): string {
   const key = toDateKey(date);
-  if (key === todayKey) return "Today";
+  if (key === todayKey) return commonContent.calendar.today;
   const today = new Date(todayKey);
   today.setDate(today.getDate() + 1);
-  if (key === toDateKey(today)) return "Tomorrow";
-  return date.toLocaleDateString(undefined, { weekday: "long" });
+  if (key === toDateKey(today)) return commonContent.calendar.tomorrow;
+  return date.toLocaleDateString("fr-FR", { weekday: "long" });
 }
 
 export function getWeekdayIndex(date: Date): number {

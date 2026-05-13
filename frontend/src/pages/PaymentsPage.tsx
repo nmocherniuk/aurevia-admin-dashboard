@@ -22,6 +22,7 @@ import type { PaymentsFilterState } from "../features/Payments/constants/filters
 import { filterPayments } from "../features/Payments/utils/filterPayments";
 import { formatMoney } from "../features/Payments/utils/formatMoney";
 import { useToast } from "../providers/ToastProvider";
+import { paymentsContent } from "../content/payments";
 
 export default function PaymentsPage() {
   const [filters, setFilters] = useState<PaymentsFilterState>(
@@ -49,7 +50,7 @@ export default function PaymentsPage() {
     mutationFn: withdrawAdminBalance,
     onSuccess: async (result) => {
       showToast({
-        message: `Withdrawn ${result.amount.toFixed(2)} ${result.currency}`,
+        message: `${paymentsContent.toasts.withdrawSuccessPrefix} ${result.amount.toFixed(2)} ${result.currency}`,
         severity: "success",
       });
       await queryClient.invalidateQueries({
@@ -58,7 +59,7 @@ export default function PaymentsPage() {
     },
     onError: (err) => {
       const message =
-        err instanceof Error ? err.message : "Failed to withdraw balance";
+        err instanceof Error ? err.message : paymentsContent.errors.withdrawGeneric;
       showToast({ message, severity: "error" });
     },
   });
@@ -91,29 +92,29 @@ export default function PaymentsPage() {
     const currency = payments[0]?.currency ?? "EUR";
     return [
       {
-        label: "Today Revenue",
+        label: paymentsContent.stats.todayRevenue,
         value: formatMoney(todayRevenue, currency),
         icon: AttachMoneyIcon,
       },
-      { label: "Unpaid", value: String(unpaid), icon: HourglassEmptyIcon },
-      { label: "Paid", value: String(paid), icon: CheckCircleOutlineIcon },
+      { label: paymentsContent.stats.unpaid, value: String(unpaid), icon: HourglassEmptyIcon },
+      { label: paymentsContent.stats.paid, value: String(paid), icon: CheckCircleOutlineIcon },
       {
-        label: "Gross (snapshots)",
+        label: paymentsContent.stats.grossSnapshots,
         value: formatMoney(grossCustomer, currency),
         icon: AttachMoneyIcon,
       },
       {
-        label: "Partner payouts (snapshots)",
+        label: paymentsContent.stats.partnerPayoutsSnapshots,
         value: formatMoney(partnerOut, currency),
         icon: CheckCircleOutlineIcon,
       },
       {
-        label: "Platform margin (snapshots)",
+        label: paymentsContent.stats.platformMarginSnapshots,
         value: formatMoney(marginOut, currency),
         icon: AttachMoneyIcon,
       },
       {
-        label: "Available Balance",
+        label: paymentsContent.stats.availableBalance,
         value: formatMoney(
           adminBalance?.availableBalance ?? 0,
           adminBalance?.currency ?? currency,
@@ -147,7 +148,7 @@ export default function PaymentsPage() {
 
         {isError && (
           <Alert severity="error" sx={{ mt: 2 }}>
-            {error instanceof Error ? error.message : "Failed to load payments"}
+            {error instanceof Error ? error.message : paymentsContent.errors.loadList}
           </Alert>
         )}
 

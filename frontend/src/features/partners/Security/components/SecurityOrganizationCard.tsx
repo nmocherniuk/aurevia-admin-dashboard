@@ -9,6 +9,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EntityActionsMenu from "../../../../components/EntityActionsMenu";
 import type { SecurityOrganization, SecurityOrganizationStatus } from "../data/types";
+import { commonContent } from "../../../../content/common";
+import { securityPartnersContent } from "../../../../content/securityPartners";
 
 const statusColors: Record<SecurityOrganizationStatus, { bg: string; color: string }> = {
   active: { bg: "rgba(34, 197, 94, 0.2)", color: "#22c55e" },
@@ -94,14 +96,14 @@ export default function SecurityOrganizationCard({
               variant="caption"
               sx={{ color: "text.secondary", display: "block" }}
             >
-              ID: {o.id}
+              {securityPartnersContent.table.idPrefix}: {o.id}
             </Typography>
           </Box>
         </Box>
         <IconButton
           size="small"
           sx={{ color: "text.secondary", flexShrink: 0 }}
-          aria-label="actions"
+          aria-label={commonContent.dataTable.actionsColumn}
           onClick={openMenu}
         >
           <MoreVertIcon />
@@ -114,25 +116,25 @@ export default function SecurityOrganizationCard({
         menuPaperSx={{ minWidth: 200, borderRadius: 2 }}
         actions={[
           {
-            label: "View details",
+            label: securityPartnersContent.rowMenu.viewDetails,
             icon: <VisibilityIcon fontSize="small" />,
             disabled: !onView,
             onClick: () => onView?.(),
           },
           {
-            label: "View bodyguards",
+            label: securityPartnersContent.rowMenu.viewBodyguards,
             icon: <GroupIcon fontSize="small" />,
             disabled: !onViewBodyguards,
             onClick: () => onViewBodyguards?.(),
           },
           {
-            label: "Edit",
+            label: securityPartnersContent.rowMenu.edit,
             icon: <EditIcon fontSize="small" />,
             disabled: !onEdit,
             onClick: () => onEdit?.(),
           },
           {
-            label: "Delete",
+            label: securityPartnersContent.rowMenu.delete,
             icon: <DeleteIcon fontSize="small" />,
             disabled: !onDelete,
             color: "error.main",
@@ -153,7 +155,7 @@ export default function SecurityOrganizationCard({
         }}
       >
         <Chip
-          label={o.status ? "active" : "inactive"}
+          label={o.status ? commonContent.status.active : commonContent.status.inactive}
           size="small"
           sx={{
             bgcolor: statusColors[o.status ? "active" : "inactive"].bg,

@@ -11,6 +11,7 @@ import type { Payment, PaymentStatus } from "../../../api/payments";
 import { formatMoney } from "../utils/formatMoney";
 import EntityActionsMenu from "../../../components/EntityActionsMenu";
 import { GenericTable } from "../../../components/GenericTable";
+import { paymentStatusChipLabel, paymentsContent } from "../../../content/payments";
 
 const statusColors: Record<PaymentStatus, { bg: string; color: string }> = {
   unpaid: { bg: "rgba(251, 191, 36, 0.25)", color: "#EAB308" },
@@ -63,37 +64,37 @@ export default function PaymentsTable({
   const columns = [
     {
       key: "bookingId",
-      label: "Booking ID",
+      label: paymentsContent.table.columnBookingId,
       render: (p: Payment) => <Typography variant="body2" sx={{ fontWeight: 600, color: "text.primary" }}>
         {p.bookingId}
       </Typography>,
     },
     {
       key: "clientName",
-      label: "Client",
+      label: paymentsContent.table.columnClient,
       render: (p: Payment) => <Typography variant="body2" sx={{ color: "text.primary" }}>
         {p.clientName}
       </Typography>
     },
     {
       key: "route",
-      label: "Route",
+      label: paymentsContent.table.columnRoute,
       render: (p: Payment) => <Typography variant="body2" sx={{ color: "text.secondary" }}>
         {p.route}
       </Typography>
     },
     {
       key: "amount",
-      label: "Amount",
+      label: paymentsContent.table.columnAmount,
       render: (p: Payment) => <Typography variant="body2" sx={{ fontWeight: 600, color: "text.primary" }}>
         {formatMoney(p.amount, p.currency)}
       </Typography>
     },
     {
       key: "paymentStatus",
-      label: "Payment Status",
+      label: paymentsContent.table.columnPaymentStatus,
       render: (p: Payment) => <Chip
-        label={p.paymentStatus}
+        label={paymentStatusChipLabel(p.paymentStatus)}
         size="small"
         sx={{
           bgcolor: statusColors[p.paymentStatus].bg,
@@ -106,7 +107,7 @@ export default function PaymentsTable({
     },
     {
       key: "paymentMethod",
-      label: "Payment Method",
+      label: paymentsContent.table.columnPaymentMethod,
       render: (p: Payment) => <Typography variant="body2" sx={{ color: "text.primary" }}>
         {p.paymentMethod}
         {p.paymentStatus === "paid" && p.cardLast4
@@ -116,7 +117,7 @@ export default function PaymentsTable({
     },
     {
       key: "date",
-      label: "Date",
+      label: paymentsContent.table.columnDate,
       render: (p: Payment) => <Typography variant="body2" sx={{ color: "text.secondary" }}>
         {p.date}
       </Typography>
@@ -129,7 +130,7 @@ export default function PaymentsTable({
     <>
 
       <GenericTable
-        title="Payments"
+        title={paymentsContent.table.title}
         columns={columns}
         data={payments}
         actions={openMenu}
@@ -153,19 +154,19 @@ export default function PaymentsTable({
         menuPaperSx={{ minWidth: 200, borderRadius: 2 }}
         actions={[
           {
-            label: "Capture payment",
+            label: paymentsContent.rowMenu.capture,
             icon: <CreditCardIcon fontSize="small" />,
             disabled: selectedPayment?.stripeStatus !== "requires_capture",
             onClick: () => handleCapture(),
           },
           {
-            label: "Refund payment",
+            label: paymentsContent.rowMenu.refund,
             icon: <MoneyOffIcon fontSize="small" />,
             disabled: selectedPayment?.paymentStatus !== "paid",
             onClick: () => handleRefund(),
           },
           {
-            label: "Resend payment link",
+            label: paymentsContent.rowMenu.resendLink,
             icon: <LinkIcon fontSize="small" />,
             disabled: selectedPayment?.paymentStatus !== "unpaid",
             onClick: () => handleResendLink(),

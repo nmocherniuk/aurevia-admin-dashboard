@@ -1,4 +1,7 @@
 import type { SecurityOrganizationFormValues } from "../../data/types";
+import { securityPartnersContent } from "../../../../../content/securityPartners";
+
+const sp = securityPartnersContent.organizationModal;
 
 export const SECURITY_SERVICE_TYPES = [
   "Static guarding",
@@ -21,18 +24,18 @@ export const DOCUMENTS_OPTIONS: Array<{
   key: keyof SecurityOrganizationFormValues;
   label: string;
 }> = [
-  { key: "kbisUploaded", label: "KBIS uploaded" },
-  { key: "licenseUploaded", label: "License uploaded" },
-  { key: "rcProInsuranceUploaded", label: "RC Pro insurance uploaded" },
+  { key: "kbisUploaded", label: sp.documents.kbisUploaded },
+  { key: "licenseUploaded", label: sp.documents.licenseUploaded },
+  { key: "rcProInsuranceUploaded", label: sp.documents.rcProInsuranceUploaded },
   {
     key: "cnapsAuthorizationUploaded",
-    label: "CNAPS authorization uploaded",
+    label: sp.documents.cnapsAuthorizationUploaded,
   },
-  { key: "bankDetailsProvided", label: "Bank details provided" },
-  { key: "directorIdCopyProvided", label: "Director ID copy provided" },
+  { key: "bankDetailsProvided", label: sp.documents.bankDetailsProvided },
+  { key: "directorIdCopyProvided", label: sp.documents.directorIdCopyProvided },
   {
     key: "signedPartnershipAgreement",
-    label: "Signed partnership agreement",
+    label: sp.documents.signedPartnershipAgreement,
   },
 ];
 
@@ -40,21 +43,21 @@ export const OPERATIONS_OPTIONS: Array<{
   key: keyof SecurityOrganizationFormValues;
   label: string;
 }> = [
-  { key: "hourlyRate", label: "Hourly rate" },
-  { key: "dailyRate", label: "Daily rate" },
-  { key: "nightRate", label: "Night rate" },
-  { key: "eventRate", label: "Event rate" },
-  { key: "executiveProtectionRate", label: "Executive protection rate" },
-  { key: "minimumBookingAmount", label: "Minimum booking amount" },
-  { key: "commissionPercent", label: "Commission (%)" },
+  { key: "hourlyRate", label: sp.financial.hourlyRate.label },
+  { key: "dailyRate", label: sp.financial.dailyRate.label },
+  { key: "nightRate", label: sp.financial.nightRate.label },
+  { key: "eventRate", label: sp.financial.eventRate.label },
+  { key: "executiveProtectionRate", label: sp.financial.executiveProtectionRate.label },
+  { key: "minimumBookingAmount", label: sp.financial.minimumBookingAmount.label },
+  { key: "commissionPercent", label: sp.financial.commissionPercent.label },
 ];
 
 export const SPECIAL_REQUIREMENTS_OPTIONS: Array<{
   key: keyof SecurityOrganizationFormValues;
   label: string;
 }> = [
-  { key: "hasTeamLeader", label: "Has team leader" },
-  { key: "armedPersonnelAllowed", label: "Armed personnel allowed" },
-  { key: "unarmedPersonnelAllowed", label: "Unarmed personnel allowed" },
-  { key: "internationalMissions", label: "International missions" },
+  { key: "hasTeamLeader", label: sp.specialRequirements.hasTeamLeader },
+  { key: "armedPersonnelAllowed", label: sp.specialRequirements.armedPersonnelAllowed },
+  { key: "unarmedPersonnelAllowed", label: sp.specialRequirements.unarmedPersonnelAllowed },
+  { key: "internationalMissions", label: sp.specialRequirements.internationalMissions },
 ];

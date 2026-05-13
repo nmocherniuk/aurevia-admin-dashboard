@@ -14,6 +14,10 @@ import {
 import { memo, type ChangeEvent } from "react";
 import type { SecurityAgentFormValues } from "../securityAgentForm.types";
 import { OPERATIONS_OPTIONS } from "../constants";
+import { commonContent } from "../../../../../../../content/common";
+import { securityAgentContent } from "../../../../../../../content/securityAgent";
+
+const mo = securityAgentContent.modal.operations;
 
 type Props = {
   readOnly: boolean;
@@ -30,16 +34,16 @@ function SecurityAgentOperationsSection({
 }: Props) {
   return (
     <>
-      <Typography sx={sectionLabelSx}>Operations & rates</Typography>
+      <Typography sx={sectionLabelSx}>{mo.sectionTitle}</Typography>
       <Grid container spacing={1.5}>
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
-            <DetailField label="Base city" value={formValues.baseCity} />
+            <DetailField label={mo.baseCity.label} value={formValues.baseCity} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Base city"
+              label={mo.baseCity.label}
               value={formValues.baseCity}
               onChange={onChange("baseCity")}
               sx={modalTextFieldSx}
@@ -49,14 +53,14 @@ function SecurityAgentOperationsSection({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Working radius (km)"
+              label={mo.workingRadiusKm.label}
               value={formValues.workingRadiusKm}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Working radius (km)"
+              label={mo.workingRadiusKm.label}
               value={formValues.workingRadiusKm}
               onChange={onChange("workingRadiusKm")}
               sx={modalTextFieldSx}
@@ -66,14 +70,14 @@ function SecurityAgentOperationsSection({
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
             <DetailField
-              label="Availability (notes)"
+              label={mo.availability.label}
               value={formValues.availability}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Availability (notes)"
+              label={mo.availability.label}
               multiline
               minRows={2}
               value={formValues.availability}
@@ -85,15 +89,15 @@ function SecurityAgentOperationsSection({
         <Grid size={{ xs: 12, md: 6 }}>
           {readOnly ? (
             <DetailField
-              label="Status"
-              value={formValues.status ? "Active" : "Inactive"}
+              label={mo.status.label}
+              value={formValues.status ? commonContent.status.active : commonContent.status.inactive}
             />
           ) : (
             <TextField
               fullWidth
               size="small"
               select
-              label="Status"
+              label={mo.status.label}
               value={formValues.status ? "active" : "inactive"}
               onChange={(e) => {
                 const checked = e.target.value === "active";
@@ -108,19 +112,19 @@ function SecurityAgentOperationsSection({
               }}
               sx={modalTextFieldSx}
             >
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="inactive">Inactive</MenuItem>
+              <MenuItem value="active">{commonContent.status.active}</MenuItem>
+              <MenuItem value="inactive">{commonContent.status.inactive}</MenuItem>
             </TextField>
           )}
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           {readOnly ? (
-            <DetailField label="Hourly rate" value={formValues.hourlyRate} />
+            <DetailField label={mo.hourlyRate.label} value={formValues.hourlyRate} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Hourly rate"
+              label={mo.hourlyRate.label}
               value={formValues.hourlyRate}
               onChange={onChange("hourlyRate")}
               sx={modalTextFieldSx}
@@ -129,12 +133,12 @@ function SecurityAgentOperationsSection({
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           {readOnly ? (
-            <DetailField label="Daily rate" value={formValues.dailyRate} />
+            <DetailField label={mo.dailyRate.label} value={formValues.dailyRate} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Daily rate"
+              label={mo.dailyRate.label}
               value={formValues.dailyRate}
               onChange={onChange("dailyRate")}
               sx={modalTextFieldSx}
@@ -143,12 +147,12 @@ function SecurityAgentOperationsSection({
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           {readOnly ? (
-            <DetailField label="Night rate" value={formValues.nightRate} />
+            <DetailField label={mo.nightRate.label} value={formValues.nightRate} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Night rate"
+              label={mo.nightRate.label}
               value={formValues.nightRate}
               onChange={onChange("nightRate")}
               sx={modalTextFieldSx}
@@ -161,7 +165,7 @@ function SecurityAgentOperationsSection({
             {readOnly ? (
               <DetailField
                 label={label}
-                value={formValues[key] ? "Yes" : "No"}
+                value={formValues[key] ? commonContent.boolean.yes : commonContent.boolean.no}
               />
             ) : (
               <FormControlLabel
@@ -179,12 +183,12 @@ function SecurityAgentOperationsSection({
 
         <Grid size={{ xs: 12 }}>
           {readOnly ? (
-            <DetailField label="Notes" value={formValues.notes} />
+            <DetailField label={mo.notes.label} value={formValues.notes} />
           ) : (
             <TextField
               fullWidth
               size="small"
-              label="Notes"
+              label={mo.notes.label}
               multiline
               minRows={3}
               value={formValues.notes}
